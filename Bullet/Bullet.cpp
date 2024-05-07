@@ -24,7 +24,7 @@ void Bullet::Update(float deltaTime) {
 	Sprite::Update(deltaTime);
 	PlayScene* scene = getPlayScene();
 	// Can be improved by Spatial Hash, Quad Tree, ...
-	// However simply loop through all enemies is enough for this program.
+	// However, simply loop through all enemies is enough for this program.
 	for (auto& it : scene->EnemyGroup->GetObjects()) {
 		Enemy* enemy = dynamic_cast<Enemy*>(it);
 		if (!enemy->Visible)

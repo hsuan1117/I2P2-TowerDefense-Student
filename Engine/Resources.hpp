@@ -28,7 +28,7 @@ namespace Engine {
 		//       If you have heard of Garbage Collection, the concept is almost the same. However, smart pointers are faster,
 		//       and only relies on reference counting and class destructor, which I think is really "smart".
 		// Note (Advanced): The reason we didn't use std::weak_ptr here is to avoid the possibility of some resource
-		//                  being loaded and destroyed consecutively, which could occur if a object prototype being
+		//                  being loaded and destroyed consecutively, which could occur if an object prototype being
 		//                  added, removed, added, removed, ... in the same scene (e.g. bullets).
 		// Reference: Smart Pointers - std::unique_ptr, std::shared_ptr, std::weak_ptr.
 		std::unordered_map<std::string, std::shared_ptr<ALLEGRO_BITMAP>> bitmaps;
