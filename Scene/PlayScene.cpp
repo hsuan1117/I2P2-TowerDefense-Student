@@ -270,7 +270,9 @@ void PlayScene::OnKeyDown(int keyCode) {
 					return;
 				++it;
 			}
+
 			EffectGroup->AddNewObject(new Plane());
+            EarnMoney(10000);
 		}
 	}
 	if (keyCode == ALLEGRO_KEY_Q) {
