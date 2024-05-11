@@ -15,9 +15,12 @@ public:
     explicit ScoreboardScene() = default;
     void Initialize() override;
     void Terminate() override;
-    void PlayOnClick(int stage);
+    void PrevOnClick();
+    void NextOnClick();
     void BackOnClick(int stage);
 };
+
+
 
 
 #endif //INC_2024_I2P2_TOWERDEFENSE_SCOREBOARDSCENE_HPP

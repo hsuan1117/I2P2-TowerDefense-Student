@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	Engine::LOG::SetConfig(true);
 	Engine::GameEngine& game = Engine::GameEngine::GetInstance();
 
-    // ODO: [HACKATHON-1-SCENE] (3/4): Register Scenes here
+    // TODO: [HACKATHON-1-SCENE] (3/4): Register Scenes here
     game.AddNewScene("start", new StartScene());
     game.AddNewScene("stage-select", new StageSelectScene());
 	game.AddNewScene("settings", new SettingsScene());
@@ -25,9 +25,8 @@ int main(int argc, char **argv) {
     game.AddNewScene("lose-scene", new LoseScene());
     game.AddNewScene("scoreboard-scene", new ScoreboardScene());
 
-    // ODO: [HACKATHON-1-SCENE] (4/4): Change the start scene
+    // TODO: [HACKATHON-1-SCENE] (4/4): Change the start scene
 //	game.Start("stage-select", 60, 1600, 832);
 	game.Start("start", 60, 1600, 832);
 	return 0;
 }
-//aaaaa
