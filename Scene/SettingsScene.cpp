@@ -18,16 +18,22 @@ void SettingsScene::Initialize() {
 
 
     Engine::ImageButton *btn;
-    btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH / 2 - 50, 400,
-                                  100);
-    btn->SetOnClickCallback(std::bind(&SettingsScene::PlayOnClick, this, 1));
+//    btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH / 2 - 50, 400,
+//                                  100);
+//    btn->SetOnClickCallback(std::bind(&SettingsScene::PlayOnClick, this, 1));
+//    AddNewControlObject(btn);
+//    AddNewObject(new Engine::Label("Stage 1", "pirulen.ttf", 48, halfW, halfH / 2, 0, 0, 0, 255, 0.5, 0.5));
+//    btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH * 3 / 2 - 50,
+//                                  400, 100);
+//    btn->SetOnClickCallback(std::bind(&SettingsScene::PlayOnClick, this, 2));
+//    AddNewControlObject(btn);
+//    AddNewObject(new Engine::Label("Stage 2", "pirulen.ttf", 48, halfW, halfH * 3 / 2, 0, 0, 0, 255, 0.5, 0.5));
+
+    btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH * 3 / 2 - 50, 400, 100);
+    btn->SetOnClickCallback(std::bind(&SettingsScene::BackOnClick, this));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("Stage 1", "pirulen.ttf", 48, halfW, halfH / 2, 0, 0, 0, 255, 0.5, 0.5));
-    btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH * 3 / 2 - 50,
-                                  400, 100);
-    btn->SetOnClickCallback(std::bind(&SettingsScene::PlayOnClick, this, 2));
-    AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("Stage 2", "pirulen.ttf", 48, halfW, halfH * 3 / 2, 0, 0, 0, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH * 3 / 2, 0, 0, 0, 255, 0.5, 0.5));
+
 
 
 
@@ -50,6 +56,10 @@ void SettingsScene::Initialize() {
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
     sliderBGM->SetValue(AudioHelper::BGMVolume);
     sliderSFX->SetValue(AudioHelper::SFXVolume);
+}
+
+void SettingsScene::BackOnClick() {
+    Engine::GameEngine::GetInstance().ChangeScene("start");
 }
 
 void SettingsScene::Terminate() {

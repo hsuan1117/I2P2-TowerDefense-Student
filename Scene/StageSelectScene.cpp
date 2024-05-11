@@ -18,6 +18,7 @@ void StageSelectScene::Initialize() {
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
     int halfH = h / 2;
+
     Engine::ImageButton* btn;
     btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH * 3 / 2 - 50, 400, 100);
     btn->SetOnClickCallback(std::bind(&StageSelectScene::BackOnClick, this, 1));
