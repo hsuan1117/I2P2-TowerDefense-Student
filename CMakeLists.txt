@@ -92,7 +92,9 @@ add_executable(TowerDefense
         Scene/StartScene.h
         Scene/SettingsScene.cpp
         Scene/SettingsScene.hpp
-#        UI/Component/TextInput.cpp
+        Scene/ScoreboardScene.cpp
+        Scene/ScoreboardScene.hpp
+        #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )
 
