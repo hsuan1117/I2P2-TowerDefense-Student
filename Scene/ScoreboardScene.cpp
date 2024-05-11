@@ -57,6 +57,7 @@ void ScoreboardScene::Initialize() {
 void ScoreboardScene::Terminate() {
     AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
+    delete scb;
     IScene::Terminate();
 }
 void ScoreboardScene::BackOnClick(int stage) {
