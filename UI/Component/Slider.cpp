@@ -15,6 +15,9 @@ Slider::Slider(float x, float y, float w, float h) :
 }
 void Slider::Draw() const {
     // TODO: [HACKATHON-3-BUG] (4/5): Draw the nested components here, so they are displayed correctly
+    Bar.Draw();
+    End1.Draw();
+    End2.Draw();
 	ImageButton::Draw();
 }
 void Slider::SetOnValueChangedCallback(std::function<void(float value)> onValueChangedCallback) {
