@@ -27,9 +27,11 @@ void Slider::SetValue(float value) {
 	if (this->value != value) {
         // TODO: [HACKATHON-3-BUG] (5/5): Fix the function, so it can set the slider value correctly
         Position.x = (1 - value) * Bar.Position.x + value * (Bar.Position.x + Bar.Size.x);
-		if (OnValueChangedCallback)
-			OnValueChangedCallback(value);
-	}
+		if (OnValueChangedCallback) {
+            OnValueChangedCallback(value);
+            this->value = value;
+        }
+    }
 }
 void Slider::OnMouseDown(int button, int mx, int my) {
 	if ((button & 1) && mouseIn)

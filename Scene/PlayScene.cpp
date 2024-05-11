@@ -25,6 +25,8 @@
 #include "Enemy/TankEnemy.hpp"
 #include "Turret/TurretButton.hpp"
 
+#include "Engine/log.hpp"
+
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
 const int PlayScene::MapWidth = 20, PlayScene::MapHeight = 13;
@@ -350,7 +352,26 @@ void PlayScene::ReadEnemyWave() {
 	float type, wait, repeat;
 	enemyWaveData.clear();
 	std::ifstream fin(filename);
-	while (fin >> type && fin >> wait && fin >> repeat) {
+	while (1) {
+
+        bool ts = (bool)(fin >> type);
+        bool ws = (bool)(fin >> wait);
+        bool rs = (bool)(fin >> repeat);
+
+        if (!ts && !ws && !rs) {
+            break;
+        }
+
+        if (!ts) {
+            type = 0;
+        }
+        if (!ws) {
+            wait = 1.0;
+        }
+        if (!rs) {
+            repeat = 0;
+        }
+
 		for (int i = 0; i < repeat; i++)
 			enemyWaveData.emplace_back(type, wait);
 	}
