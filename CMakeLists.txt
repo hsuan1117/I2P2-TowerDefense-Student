@@ -96,6 +96,8 @@ add_executable(TowerDefense
         Scene/ScoreboardScene.hpp
         UI/Component/Scoreboard.cpp
         UI/Component/Scoreboard.hpp
+        Enemy/FlameTank.cpp
+        Enemy/FlameTank.hpp
         #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )
