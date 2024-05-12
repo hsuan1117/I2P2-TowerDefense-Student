@@ -41,7 +41,7 @@ namespace Engine {
 
             al_draw_text(
                     menuFont,
-                    al_map_rgb(255, 255, 255),
+                    al_map_rgb(r, g, b),
                     x,
                     y + 50 * j,
                     ALLEGRO_ALIGN_LEFT,
@@ -52,7 +52,7 @@ namespace Engine {
 
             al_draw_text(
                     menuFont,
-                    al_map_rgb(255, 255, 255),
+                    al_map_rgb(r, g, b),
                     x+1000,
                     y + 50 * j,
                     ALLEGRO_ALIGN_RIGHT,
