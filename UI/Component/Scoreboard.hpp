@@ -24,7 +24,7 @@ extern int upper;
 namespace Engine {
     class Scoreboard : public IObject, public IControl {
     private:
-        static const int max_line = 9;
+        static const int max_line = 10;
         std::basic_string<char> path;
 
         int x;
