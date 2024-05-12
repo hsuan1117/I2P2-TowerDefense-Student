@@ -11,6 +11,9 @@ int upper;
 namespace Engine {
 
     void Scoreboard::Draw() const {
+        if (!show) {
+            return;
+        }
         const float scale = 0.7;
 
         //draw score
@@ -86,6 +89,10 @@ namespace Engine {
     }
 
     void Scoreboard::OnMouseScroll(int mx, int my, int delta) {
+        if (!show) {
+            return;
+        }
+
         if (delta > 0)
         {
             Engine::LOG(INFO) << "Mouse Wheel UP!";
@@ -109,5 +116,13 @@ namespace Engine {
 
     int Scoreboard::get_num() const {
         return i;
+    }
+
+    void Scoreboard::MakeShow() {
+        show = true;
+    }
+
+    void Scoreboard::MakeNotShow() {
+        show = false;
     }
 }

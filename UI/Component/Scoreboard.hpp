@@ -38,6 +38,8 @@ namespace Engine {
 
         ALLEGRO_FONT* menuFont;
 
+        bool show = true;
+
     public:
         ScoreBoardInstance* scb;
 
@@ -106,6 +108,9 @@ namespace Engine {
         void OnMouseScroll(int mx, int my, int delta) override;
 
         int get_num() const;
+
+        void MakeShow();
+        void MakeNotShow();
     };
 }
 
