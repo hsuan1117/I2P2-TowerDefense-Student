@@ -100,6 +100,8 @@ add_executable(TowerDefense
         Enemy/FlameTank.hpp
         Turret/MomoiTurret.cpp
         Turret/MomoiTurret.hpp
+        Bullet/MomoiBullet.cpp
+        Bullet/MomoiBullet.hpp
         #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )

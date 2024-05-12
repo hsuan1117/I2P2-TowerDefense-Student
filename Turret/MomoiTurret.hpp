@@ -4,11 +4,13 @@
 
 #ifndef INC_2024_I2P2_TOWERDEFENSE_MOMOITURRET_HPP
 #define INC_2024_I2P2_TOWERDEFENSE_MOMOITURRET_HPP
+#include "Turret.hpp"
 
-
-class MomoiTurret {
-
+class MomoiTurret: public Turret {
+public:
+    static const int Price;
+    MomoiTurret(float x, float y);
+    void CreateBullet() override;
 };
-
 
 #endif //INC_2024_I2P2_TOWERDEFENSE_MOMOITURRET_HPP
