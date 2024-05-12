@@ -453,9 +453,10 @@ bool PlayScene::CheckSpaceValid(int x, int y) {
 		if (pnt.x >= MapWidth) pnt.x = MapWidth - 1;
 		if (pnt.y < 0) pnt.y = 0;
 		if (pnt.y >= MapHeight) pnt.y = MapHeight - 1;
-		if (map[pnt.y][pnt.x] == -1)
-			return false;
-	}
+		if (map[pnt.y][pnt.x] == -1) {
+            return false;
+        }
+    }
 	// All enemy have path to exit.
 	mapState[y][x] = TILE_OCCUPIED;
 	mapDistance = map;
@@ -476,9 +477,62 @@ std::vector<std::vector<int>> PlayScene::CalculateBFSDistance() {
 	while (!que.empty()) {
 		Engine::Point p = que.front();
 		que.pop();
-		// TODO: [BFS PathFinding] (1/1): Implement a BFS starting from the most right-bottom block in the map.
+		// ODO: [BFS PathFinding] (1/1): Implement a BFS starting from the most right-bottom block in the map.
 		//               For each step you should assign the corresponding distance to the most right-bottom block.
 		//               mapState[y][x] is TILE_DIRT if it is empty.
+
+        if (p.y < 0 || p.x < 0 || p.y >= MapHeight || p.x >= MapWidth) {
+            continue;
+        }
+
+
+        int minbgt0 = -4;
+
+        if (p.y-1 >= 0 && map[p.y-1][p.x] >= 0) {
+            minbgt0 = map[p.y-1][p.x] + 1;
+        }
+        if (p.x-1 >= 0 && map[p.y][p.x-1] >= 0 && map[p.y][p.x-1] > minbgt0) {
+            minbgt0 = map[p.y][p.x-1] + 1;
+        }
+        if (p.y+1 < MapHeight && map[p.y+1][p.x] >= 0 && map[p.y+1][p.x] > minbgt0) {
+            minbgt0 = map[p.y+1][p.x] + 1;
+        }
+        if (p.x+1 < MapWidth && map[p.y][p.x+1] >= 0 && map[p.y][p.x+1] > minbgt0) {
+            minbgt0 = map[p.y][p.x+1] + 1;
+        }
+
+
+        if (p.y == MapHeight-1 && p.x == MapWidth-1) {
+            map[p.y][p.x] = 0;
+        } else {
+            map[p.y][p.x] = minbgt0;
+        }
+
+
+        if (p.y-1 >= 0 && mapState[p.y-1][p.x] == TILE_DIRT && map[p.y-1][p.x] == -1) {
+            que.push(Engine::Point(p.x, p.y-1));
+            map[p.y-1][p.x] = -2;
+        }
+        if (p.x-1 >= 0 && mapState[p.y][p.x-1] == TILE_DIRT && map[p.y][p.x-1] == -1) {
+            que.push(Engine::Point(p.x-1, p.y));
+            map[p.y][p.x-1] = -2;
+        }
+        if (p.y+1 < MapHeight && mapState[p.y+1][p.x] == TILE_DIRT && map[p.y+1][p.x] == -1) {
+            que.push(Engine::Point(p.x, p.y+1));
+            map[p.y+1][p.x] = -2;
+        }
+        if (p.x+1 < MapWidth && mapState[p.y][p.x+1] == TILE_DIRT && map[p.y][p.x+1] == -1) {
+            que.push(Engine::Point(p.x+1, p.y));
+            map[p.y][p.x+1] = -2;
+        }
+
+
+
+        if (0) {
+            //map[0][0] = 100;
+            map[p.y][p.x] = 1;
+            return map;
+        }
 	}
 	return map;
 }
