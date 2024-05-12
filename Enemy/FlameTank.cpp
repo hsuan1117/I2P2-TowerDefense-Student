@@ -8,7 +8,7 @@
 #include "Engine/Point.hpp"
 #include "FlameTank.hpp"
 
-FlameTank::FlameTank(int x, int y) : Enemy("play/enemy-6.png", x, y, 25, 15, 300, 100),
+FlameTank::FlameTank(int x, int y) : Enemy("play/enemy-6.png", x, y, 25, 28, 500, 100),
                                      head("play/enemy-2.png", x, y), targetRotation(0) {
 }
 void FlameTank::Draw() const {
