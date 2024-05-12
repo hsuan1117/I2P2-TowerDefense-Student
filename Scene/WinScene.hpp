@@ -12,6 +12,9 @@ private:
 protected:
 //    static std::string username;
 //    static int name_ptr;
+    std::string username = "";
+    bool Rshift = false;
+    bool Lshift = false;
 public:
 	explicit WinScene() = default;
 	void Initialize() override;

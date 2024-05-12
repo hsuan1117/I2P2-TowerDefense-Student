@@ -13,11 +13,7 @@
 #include "UI/Component/Label.hpp"
 #include "UI/Component/Scoreboard.hpp"
 
-std::string username = "";
-bool Rshift = false;
-bool Lshift = false;
-
-
+Engine::Label *Lwin;
 
 void WinScene::Initialize() {
 	ticks = 0;
@@ -34,12 +30,15 @@ void WinScene::Initialize() {
 	AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
 	bgmId = AudioHelper::PlayAudio("win.wav");
 
-    Engine::Label *L = new Engine::Label(&username, "pirulen.ttf", 32, 350, 50, 255, 255, 255, 255, 0.5, 0.5);
+    Lwin = new Engine::Label(&username, "pirulen.ttf", 32, halfW-200, 150, 255, 255, 255, 255, 0.5, 0.5, true);
 
-    AddRefObject(*L);
+    AddRefObject(*Lwin);
 }
 void WinScene::Terminate() {
     Engine::LOG(Engine::INFO) << "Username: " << username;
+    if (username == "") {
+        username = "???";
+    }
     //
     std::string path = "Resource/scoreboard.txt";
     Engine::Scoreboard scoreboard(path, 0, 0);
@@ -86,7 +85,7 @@ void WinScene::Terminate() {
 
     if (flag)
     {
-        fprintf_s(score, "%s %d\n", username.c_str(), points);
+        fprintf_s(score, "%s - %d\n", username.c_str(), points);
         flag = false;
     }
 
@@ -95,6 +94,8 @@ void WinScene::Terminate() {
     //
 	IScene::Terminate();
 	AudioHelper::StopBGM(bgmId);
+
+    delete Lwin;
 }
 void WinScene::Update(float deltaTime) {
 	ticks += deltaTime;
@@ -106,7 +107,7 @@ void WinScene::Update(float deltaTime) {
 }
 void WinScene::BackOnClick(int stage) {
 	// Change to select scene.
-	//Engine::GameEngine::GetInstance().ChangeScene("stage-select");
+	Engine::GameEngine::GetInstance().ChangeScene("stage-select");
 }
 void WinScene::OnKeyDown(int keyCode) {
     switch (keyCode) {
@@ -166,6 +167,10 @@ void WinScene::OnKeyDown(int keyCode) {
             {
                 Engine::LOG(Engine::INFO) << ("Enter:%c") << (char)(keyCode + '0' - 27);
                 username += (char)(keyCode + '0' - 27);
+            }
+            else
+            {
+                Engine::LOG(Engine::INFO) << "Key Not Support: " << keyCode;
             }
             break;
     }
