@@ -18,6 +18,7 @@ namespace Engine {
 	public:
 		// Text to draw.
 		std::string Text;
+        std::string *t;
 		// Text's color.
 		ALLEGRO_COLOR Color;
 		/// <summary>
@@ -38,6 +39,10 @@ namespace Engine {
 		/// <summary>
 		/// Draw text with loaded font.
 		/// </summary>
+
+        explicit Label(std::string *ta, const std::string& font , int fontSize, float x, float y, unsigned char r = 0, unsigned char g = 0, unsigned char b = 0, unsigned char a = 255, float anchorX = 0, float anchorY = 0);
+
+
 		void Draw() const override;
 		/// <summary>
 		/// Return text width.
