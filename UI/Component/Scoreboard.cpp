@@ -106,4 +106,8 @@ namespace Engine {
             }
         }
     }
+
+    int Scoreboard::get_num() const {
+        return i;
+    }
 }

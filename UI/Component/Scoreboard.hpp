@@ -31,7 +31,7 @@ namespace Engine {
         int y;
 
         int i;
-        ScoreBoardInstance* scb;
+
         int ptr;
 
         int n;
@@ -39,6 +39,8 @@ namespace Engine {
         ALLEGRO_FONT* menuFont;
 
     public:
+        ScoreBoardInstance* scb;
+
         Scoreboard(std::string _path, int _x, int _y) : path(_path), x(_x), y(_y), i(0), scb(), ptr(0), n(99)
         {
             menuFont = al_load_font("Resource/fonts/pirulen.ttf", 30, 0);
@@ -102,6 +104,8 @@ namespace Engine {
         void PrevPage();
 
         void OnMouseScroll(int mx, int my, int delta) override;
+
+        int get_num() const;
     };
 }
 
