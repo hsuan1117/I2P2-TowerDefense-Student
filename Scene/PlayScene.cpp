@@ -29,6 +29,9 @@
 
 #include "Engine/log.hpp"
 
+//ODO: Add shortcut key for momoi turret
+//TODO: Insert the point of scoreboard correctly
+
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
 const int PlayScene::MapWidth = 20, PlayScene::MapHeight = 13;
@@ -167,9 +170,9 @@ void PlayScene::Update(float deltaTime) {
 			break;
         case 4:
             EnemyGroup->AddNewObject(enemy = new FlameTank(SpawnCoordinate.x, SpawnCoordinate.y));
-        // TODO: [CUSTOM-ENEMY]: You need to modify 'Resource/enemy1.txt', or 'Resource/enemy2.txt' to spawn the 4th enemy.
+        // ODO: [CUSTOM-ENEMY]: You need to modify 'Resource/enemy1.txt', or 'Resource/enemy2.txt' to spawn the 4th enemy.
         //         The format is "[EnemyId] [TimeDelay] [Repeat]".
-        // TODO: [CUSTOM-ENEMY]: Enable the creation of the enemy.
+        // ODO: [CUSTOM-ENEMY]: Enable the creation of the enemy.
             break;
 		default:
 			continue;
@@ -294,7 +297,10 @@ void PlayScene::OnKeyDown(int keyCode) {
 		// Hotkey for MissileTurret.
 		UIBtnClicked(2);
 	}
-	// TODO: [CUSTOM-TURRET]: Make specific key to create the turret.
+    else if (keyCode == ALLEGRO_KEY_D) {
+        UIBtnClicked(3);
+    }
+	// ODO: [CUSTOM-TURRET]: Make specific key to create the turret.
 	else if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9) {
 		// Hotkey for Speed up.
 		SpeedMult = keyCode - ALLEGRO_KEY_0;
