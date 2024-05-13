@@ -154,6 +154,8 @@ namespace Engine {
 
         void Draw() const override;
 
+        void AddNew(std::string username, int money, int life);
+
         void PtrInc();
         void NextPage();
         void PtrDec();

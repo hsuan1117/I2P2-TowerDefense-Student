@@ -61,6 +61,56 @@ namespace Engine {
         }
     }
 
+    void Scoreboard::AddNew(std::string username, int money, int life) {
+        FILE* score;
+
+        if (remove(path.c_str()) == 0)
+        {
+            Engine::LOG(Engine::INFO) << path << (" deleted successfully");
+        }
+        else
+        {
+            Engine::LOG(Engine::ERROR) << ("Fail to delete ") << path;
+        }
+
+
+        if (fopen_s(&score, path.c_str(), "w+") != 0)
+        {
+            Engine::LOG(Engine::ERROR) << ("Fail to open new ScoreBoard");
+        }
+        else
+        {
+            Engine::LOG(Engine::INFO) << ("ScoreBoard File create Successfully");
+        }
+
+        bool flag = true;
+
+        for (int i = 0; i < get_num(); i++)
+        {
+            if (money > scb[i].score && flag)
+            {
+                fprintf_s(score, "%s %d\n", username.c_str(), money);
+                Engine::LOG(Engine::INFO) << username << money;
+                flag = false;
+                fprintf_s(score, "%s %d\n", scb[i].name, scb[i].score);
+                Engine::LOG(Engine::INFO) << i;
+                continue;
+            }
+
+            fprintf_s(score, "%s %d\n", scb[i].name, scb[i].score);
+        }
+
+        if (flag)
+        {
+            fprintf_s(score, "%s - %d\n", username.c_str(), money);
+            flag = false;
+        }
+
+        ++i;
+
+        fclose(score);
+    }
+
     void Scoreboard::PtrInc() {
         ++ptr;
         if (ptr >= i-1) {
@@ -95,7 +145,7 @@ namespace Engine {
 
         if (delta > 0)
         {
-            Engine::LOG(INFO) << "Mouse Wheel UP!";
+            //Engine::LOG(INFO) << "Mouse Wheel UP!";
             ptr--;
             if (ptr < 0)
             {
@@ -105,7 +155,7 @@ namespace Engine {
 
         if (delta < 0)
         {
-            Engine::LOG(INFO) << "Mouse Wheel DOWN!";
+            //Engine::LOG(INFO) << "Mouse Wheel DOWN!";
             ptr++;
             if (ptr >= i)
             {
