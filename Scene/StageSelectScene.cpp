@@ -12,6 +12,7 @@
 #include "Engine/Resources.hpp"
 #include "UI/Component/Slider.hpp"
 #include "StageSelectScene.hpp"
+#include "WinScene.hpp"
 
 void StageSelectScene::Initialize() {
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
@@ -53,6 +54,7 @@ void StageSelectScene::BackOnClick(int stage) {
 void StageSelectScene::PlayOnClick(int stage) {
     PlayScene* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetScene("play"));
     scene->MapId = stage;
+    SetLastStage(stage);
     Engine::GameEngine::GetInstance().ChangeScene("play");
 }
 void StageSelectScene::ScoreboardOnClick() {

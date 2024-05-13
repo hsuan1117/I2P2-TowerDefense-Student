@@ -14,6 +14,11 @@
 #include "UI/Component/Scoreboard.hpp"
 
 Engine::Label *Lwin;
+static int last_stage = 1;
+
+void SetLastStage(int stage) {
+    last_stage = stage;
+}
 
 void WinScene::Initialize() {
 	ticks = 0;

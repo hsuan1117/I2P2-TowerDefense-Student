@@ -5,6 +5,8 @@
 
 extern std::string username;
 
+void SetLastStage(int stage);
+
 class WinScene final : public Engine::IScene {
 private:
 	float ticks;
