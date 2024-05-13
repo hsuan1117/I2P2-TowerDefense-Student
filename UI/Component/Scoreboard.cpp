@@ -61,7 +61,7 @@ namespace Engine {
         }
     }
 
-    void Scoreboard::AddNew(std::string username, int money, int life) {
+    void Scoreboard::AddNew(std::string username, int points) {
         FILE* score;
 
         if (remove(path.c_str()) == 0)
@@ -87,10 +87,10 @@ namespace Engine {
 
         for (int i = 0; i < get_num(); i++)
         {
-            if (money > scb[i].score && flag)
+            if (points > scb[i].score && flag)
             {
-                fprintf_s(score, "%s %d\n", username.c_str(), money);
-                Engine::LOG(Engine::INFO) << username << money;
+                fprintf_s(score, "%s %d\n", username.c_str(), points);
+                Engine::LOG(Engine::INFO) << username << points;
                 flag = false;
                 fprintf_s(score, "%s %d\n", scb[i].name, scb[i].score);
                 Engine::LOG(Engine::INFO) << i;
@@ -102,7 +102,7 @@ namespace Engine {
 
         if (flag)
         {
-            fprintf_s(score, "%s - %d\n", username.c_str(), money);
+            fprintf_s(score, "%s - %d\n", username.c_str(), points);
             flag = false;
         }
 
