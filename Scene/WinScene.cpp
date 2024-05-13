@@ -16,8 +16,15 @@
 Engine::Label *Lwin;
 static int last_stage = 1;
 
+static WinSceneInfo win_scene_info = {1, 0, 0};
+
 void SetLastStage(int stage) {
-    last_stage = stage;
+    win_scene_info.last_stage = stage;
+}
+
+void SetLastGameInfo(int money, int life) {
+    win_scene_info.money_left = money;
+    win_scene_info.life_left = life;
 }
 
 void WinScene::Initialize() {
@@ -46,9 +53,12 @@ void WinScene::Terminate() {
     }
 
     std::string path = (std::string)"Resource/stage" + (char)(last_stage + '0') + "_moneyLeft_scoreboard.txt";
-    Engine::Scoreboard scoreboard(path, 0, 0);
+    Engine::Scoreboard money_scoreboard(path, 0, 0);
+    money_scoreboard.AddNew(username, win_scene_info.money_left);
 
-    scoreboard.AddNew(username, 10000, 10);
+    path = (std::string)"Resource/stage" + (char)(last_stage + '0') + "_lifeLeft_scoreboard.txt";
+    Engine::Scoreboard life_scoreboard(path, 0, 0);
+    life_scoreboard.AddNew(username, win_scene_info.life_left);
 
 	IScene::Terminate();
 	AudioHelper::StopBGM(bgmId);

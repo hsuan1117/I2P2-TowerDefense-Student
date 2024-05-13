@@ -3,9 +3,15 @@
 #include <allegro5/allegro_audio.h>
 #include "Engine/IScene.hpp"
 
-extern std::string username;
-
 void SetLastStage(int stage);
+void SetLastGameInfo(int money, int life);
+
+
+struct WinSceneInfo {
+    int last_stage;
+    int money_left;
+    int life_left;
+};
 
 class WinScene final : public Engine::IScene {
 private:

@@ -26,7 +26,7 @@
 #include "Enemy/TankEnemy.hpp"
 #include "Turret/TurretButton.hpp"
 #include "Enemy/FlameTank.hpp"
-
+#include "WinScene.hpp"
 #include "Engine/log.hpp"
 
 //ODO: Add shortcut key for momoi turret
@@ -81,6 +81,8 @@ void PlayScene::Initialize() {
 	bgmId = AudioHelper::PlayBGM("play.ogg");
 }
 void PlayScene::Terminate() {
+    SetLastGameInfo(money, lives);
+
 	AudioHelper::StopBGM(bgmId);
 	AudioHelper::StopSample(deathBGMInstance);
 	deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
@@ -426,7 +428,7 @@ void PlayScene::ConstructUI() {
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 3));
     UIGroup->AddNewControlObject(btn);
 
-	// TODO: [CUSTOM-TURRET]: Create a button to support constructing the turret.
+	// ODO: [CUSTOM-TURRET]: Create a button to support constructing the turret.
 	int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
 	int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
 	int shift = 135 + 25;
@@ -438,7 +440,7 @@ void PlayScene::ConstructUI() {
 void PlayScene::UIBtnClicked(int id) {
 	if (preview)
 		UIGroup->RemoveObject(preview->GetObjectIterator());
-    // TODO: [CUSTOM-TURRET]: On callback, create the turret.
+    // ODO: [CUSTOM-TURRET]: On callback, create the turret.
 	if (id == 0 && money >= MachineGunTurret::Price)
 		preview = new MachineGunTurret(0, 0);
 	else if (id == 1 && money >= LaserTurret::Price)
@@ -545,14 +547,6 @@ std::vector<std::vector<int>> PlayScene::CalculateBFSDistance() {
         if (p.x+1 < MapWidth && mapState[p.y][p.x+1] == TILE_DIRT && map[p.y][p.x+1] == -1) {
             que.push(Engine::Point(p.x+1, p.y));
             map[p.y][p.x+1] = -2;
-        }
-
-
-
-        if (0) {
-            //map[0][0] = 100;
-            map[p.y][p.x] = 1;
-            return map;
         }
 	}
 	return map;
