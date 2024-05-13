@@ -39,59 +39,12 @@ void WinScene::Terminate() {
     if (username == "") {
         username = "???";
     }
-    //
-    std::string path = "Resource/scoreboard.txt";
+
+    std::string path = (std::string)"Resource/stage" + (char)(last_stage + '0') + "_moneyLeft_scoreboard.txt";
     Engine::Scoreboard scoreboard(path, 0, 0);
 
-    int points = 50;
+    scoreboard.AddNew(username, 10000, 10);
 
-    FILE* score;
-
-    if (remove(path.c_str()) == 0)
-    {
-        Engine::LOG(Engine::INFO) << path << (" deleted successfully");
-    }
-    else
-    {
-        Engine::LOG(Engine::ERROR) << ("Fail to delete ") << path;
-    }
-
-
-    if (fopen_s(&score, path.c_str(), "w+") != 0)
-    {
-        Engine::LOG(Engine::ERROR) << ("Fail to open new ScoreBoard");
-    }
-    else
-    {
-        Engine::LOG(Engine::INFO) << ("ScoreBoard File create Successfully");
-    }
-
-    bool flag = true;
-
-    for (int i = 0; i < scoreboard.get_num(); i++)
-    {
-        if (points > scoreboard.scb[i].score && flag)
-        {
-            fprintf_s(score, "%s %d\n", username.c_str(), points);
-            Engine::LOG(Engine::INFO) << username << points;
-            flag = false;
-            fprintf_s(score, "%s %d\n", scoreboard.scb[i].name, scoreboard.scb[i].score);
-            Engine::LOG(Engine::INFO) << i;
-            continue;
-        }
-
-        fprintf_s(score, "%s %d\n", scoreboard.scb[i].name, scoreboard.scb[i].score);
-    }
-
-    if (flag)
-    {
-        fprintf_s(score, "%s - %d\n", username.c_str(), points);
-        flag = false;
-    }
-
-    fclose(score);
-
-    //
 	IScene::Terminate();
 	AudioHelper::StopBGM(bgmId);
 
