@@ -14,7 +14,6 @@
 #include "UI/Component/Scoreboard.hpp"
 
 Engine::Label *Lwin;
-static int last_stage = 1;
 
 static WinSceneInfo win_scene_info = {1, 0, 0};
 
@@ -52,11 +51,11 @@ void WinScene::Terminate() {
         username = "???";
     }
 
-    std::string path = (std::string)"Resource/stage" + (char)(last_stage + '0') + "_moneyLeft_scoreboard.txt";
+    std::string path = (std::string)"Resource/stage" + (char)(win_scene_info.last_stage + '0') + "_moneyLeft_scoreboard.txt";
     Engine::Scoreboard money_scoreboard(path, 0, 0);
     money_scoreboard.AddNew(username, win_scene_info.money_left);
 
-    path = (std::string)"Resource/stage" + (char)(last_stage + '0') + "_lifeLeft_scoreboard.txt";
+    path = (std::string)"Resource/stage" + (char)(win_scene_info.last_stage + '0') + "_lifeLeft_scoreboard.txt";
     Engine::Scoreboard life_scoreboard(path, 0, 0);
     life_scoreboard.AddNew(username, win_scene_info.life_left);
 
@@ -142,7 +141,6 @@ void WinScene::OnKeyDown(int keyCode) {
             }
             break;
     }
-
 }
 void WinScene::OnKeyUp(int keyCode) {
     switch (keyCode) {
