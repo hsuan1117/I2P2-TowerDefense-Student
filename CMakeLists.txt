@@ -102,6 +102,8 @@ add_executable(TowerDefense
         Turret/MomoiTurret.hpp
         Bullet/MomoiBullet.cpp
         Bullet/MomoiBullet.hpp
+        Utility/TimeHelper.cpp
+        Utility/TimeHelper.hpp
         #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )

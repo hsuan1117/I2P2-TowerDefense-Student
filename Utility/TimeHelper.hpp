@@ -1,0 +1,12 @@
+//
+// Created by wuru8 on 2024/5/13.
+//
+
+#ifndef INC_2024_I2P2_TOWERDEFENSE_TIMEHELPER_HPP
+#define INC_2024_I2P2_TOWERDEFENSE_TIMEHELPER_HPP
+
+#include <string>
+
+char* GetCurrentTime();
+
+#endif //INC_2024_I2P2_TOWERDEFENSE_TIMEHELPER_HPP
