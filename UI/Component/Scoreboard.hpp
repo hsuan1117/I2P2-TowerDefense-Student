@@ -17,6 +17,7 @@ typedef struct
 {
     int score;
     char name[100];
+    char time[30];
 } ScoreBoardInstance;
 
 extern int upper;
@@ -83,9 +84,9 @@ namespace Engine {
 
             for (i; i < n; i++)
             {
-                if (fscanf_s(score, "%s%d", scb[i].name, sizeof(char) * 100, &scb[i].score) == 2)
+                if (fscanf_s(score, "%s%d%s", scb[i].name, sizeof(char) * 100, &scb[i].score, scb[i].time, sizeof(char) * 30) == 3)
                 {
-                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score;
+                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score << " " << scb[i].time;
                 }
                 else
                 {
@@ -133,9 +134,9 @@ namespace Engine {
 
             for (i; i < n; i++)
             {
-                if (fscanf_s(score, "%s%d", scb[i].name, sizeof(char) * 100, &scb[i].score) == 2)
+                if (fscanf_s(score, "%s%d%s", scb[i].name, sizeof(char) * 100, &scb[i].score, scb[i].time, sizeof(char) * 30) == 3)
                 {
-                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score;
+                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score << " " << scb[i].time;
                 }
                 else
                 {

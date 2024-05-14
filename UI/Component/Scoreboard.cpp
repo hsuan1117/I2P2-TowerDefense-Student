@@ -5,6 +5,7 @@
 #include "Engine/IObject.hpp"
 #include "UI/Component/Label.hpp"
 #include "Scoreboard.hpp"
+#include "Utility/TimeHelper.hpp"
 
 int upper;
 
@@ -48,12 +49,12 @@ namespace Engine {
                     temp
             );
 
-            sprintf_s(temp, 100, "%d", scb[j + ptr].score);
+            sprintf_s(temp, 100, "%d     %s", scb[j + ptr].score, scb[j + ptr].time);
 
             al_draw_text(
                     menuFont,
                     al_map_rgb(r, g, b),
-                    x+1000,
+                    x+1200,
                     y + 50 * j,
                     ALLEGRO_ALIGN_RIGHT,
                     temp
@@ -89,20 +90,20 @@ namespace Engine {
         {
             if (points > scb[i].score && flag)
             {
-                fprintf_s(score, "%s %d\n", username.c_str(), points);
+                fprintf_s(score, "%s %d %s\n", username.c_str(), points, GetCurrentTime());
                 Engine::LOG(Engine::INFO) << username << points;
                 flag = false;
-                fprintf_s(score, "%s %d\n", scb[i].name, scb[i].score);
+                fprintf_s(score, "%s %d %s\n", scb[i].name, scb[i].score, scb[i].time);
                 Engine::LOG(Engine::INFO) << i;
                 continue;
             }
 
-            fprintf_s(score, "%s %d\n", scb[i].name, scb[i].score);
+            fprintf_s(score, "%s %d %s\n", scb[i].name, scb[i].score, scb[i].time);
         }
 
         if (flag)
         {
-            fprintf_s(score, "%s - %d\n", username.c_str(), points);
+            fprintf_s(score, "%s %d %s\n", username.c_str(), points, GetCurrentTime());
             flag = false;
         }
 

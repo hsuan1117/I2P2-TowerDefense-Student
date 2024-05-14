@@ -85,11 +85,11 @@ void ScoreboardScene::Initialize() {
     AddNewControlObject(btn);
 
 
-    money_btn = new Engine::ImageButton("stage-select/money.png", "stage-select/arrow_left_hovered.png", 1350, 120, 64, 64);
+    money_btn = new Engine::ImageButton("stage-select/money.png", "stage-select/money_hovered.png", 1350, 120, 64, 64);
     money_btn->SetOnClickCallback(&SetMoney);
     AddRefControlObject(*money_btn);
 
-    life_btn = new Engine::ImageButton("stage-select/heart.png", "stage-select/arrow_left_hovered.png", 1450, 120, 64, 64);
+    life_btn = new Engine::ImageButton("stage-select/heart.png", "stage-select/heart_hovered.png", 1450, 120, 64, 64);
     life_btn->SetOnClickCallback(&SetLife);
     AddRefControlObject(*life_btn);
 
@@ -99,12 +99,12 @@ void ScoreboardScene::Initialize() {
 
     for (int i = 0; i <= 1; i++) {
         ss = (std::string)"Resource/stage" + (char)(i+1 + '0') + "_moneyLeft_scoreboard.txt";
-        scb[i][0] = new Engine::Scoreboard(ss, 250, 100, 220, 220, 55);
+        scb[i][0] = new Engine::Scoreboard(ss, 150, 100, 220, 220, 55);
         AddRefObject(*scb[i][0]);
         AddRefControl(*scb[i][0]);
 
         ss = (std::string)"Resource/stage" + (char)(i+1 + '0') + "_lifeLeft_scoreboard.txt";
-        scb[i][1] = new Engine::Scoreboard(ss, 250, 100, 255, 200, 200);
+        scb[i][1] = new Engine::Scoreboard(ss, 150, 100, 255, 200, 200);
         AddRefObject(*scb[i][1]);
         AddRefControl(*scb[i][1]);
     }
