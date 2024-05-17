@@ -1,15 +1,11 @@
 #include <cmath>
 #include <random>
-#include <string>
-#include <utility>
 
 #include "UI/Animation/DirtyEffect.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Engine/Group.hpp"
-#include "Engine/IObject.hpp"
 #include "MissileBullet.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Engine/Point.hpp"
 
 class Turret;
 
@@ -21,7 +17,7 @@ void MissileBullet::Update(float deltaTime) {
 		float minDistance = INFINITY;
 		Enemy* enemy = nullptr;
 		for (auto& it : getPlayScene()->EnemyGroup->GetObjects()) {
-			Enemy* e = dynamic_cast<Enemy*>(it);
+			auto* e = dynamic_cast<Enemy*>(it);
 			float distance = (e->Position - Position).Magnitude();
 			if (distance < minDistance) {
 				minDistance = distance;

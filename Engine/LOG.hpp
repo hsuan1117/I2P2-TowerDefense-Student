@@ -74,4 +74,4 @@ namespace Engine {
 		static void SetConfig(bool enabled = false, bool logVerbose = false, const char* filePath = "log.txt");
 	};
 }
-#endif // LOGGER_HPP
+#endif // LOG_HPP

@@ -11,7 +11,7 @@
 #include "Scene/SettingsScene.hpp"
 #include "Scene/ScoreboardScene.hpp"
 
-int main(int argc, char **argv) {
+int main() {
 	Engine::LOG::SetConfig(true);
 	Engine::GameEngine& game = Engine::GameEngine::GetInstance();
 

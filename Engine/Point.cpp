@@ -35,7 +35,7 @@ namespace Engine {
 	}
 	float Point::Magnitude() const {
 		return sqrt(MagnitudeSquared());
-	};
+	}
 	Point operator*(const float& lhs, const Point& rhs) {
 		return rhs * lhs;
 	}

@@ -1,13 +1,12 @@
 #include "Bullet.hpp"
+
+#include <utility>
 #include "Engine/Collider.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Group.hpp"
-#include "Engine/IObject.hpp"
 #include "Engine/IScene.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Engine/Point.hpp"
-#include "Engine/Sprite.hpp"
 
 PlayScene* Bullet::getPlayScene() {
 	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
@@ -15,7 +14,7 @@ PlayScene* Bullet::getPlayScene() {
 void Bullet::OnExplode(Enemy* enemy) {
 }
 Bullet::Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent) :
-	Sprite(img, position.x, position.y), speed(speed), damage(damage), parent(parent) {
+	Sprite(std::move(img), position.x, position.y), speed(speed), damage(damage), parent(parent) {
 	Velocity = forwardDirection.Normalize() * speed;
 	Rotation = rotation;
 	CollisionRadius = 4;
@@ -26,7 +25,7 @@ void Bullet::Update(float deltaTime) {
 	// Can be improved by Spatial Hash, Quad Tree, ...
 	// However, simply loop through all enemies is enough for this program.
 	for (auto& it : scene->EnemyGroup->GetObjects()) {
-		Enemy* enemy = dynamic_cast<Enemy*>(it);
+		auto* enemy = dynamic_cast<Enemy*>(it);
 		if (!enemy->Visible)
 			continue;
 		if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, enemy->Position, enemy->CollisionRadius)) {

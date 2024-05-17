@@ -3,7 +3,6 @@
 //
 #include <allegro5/base.h>
 #include <random>
-#include <string>
 
 #include "Engine/Point.hpp"
 #include "FlameTank.hpp"

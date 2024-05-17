@@ -1,12 +1,10 @@
 #include <allegro5/base.h>
 #include <random>
-#include <string>
 
 #include "UI/Animation/DirtyEffect.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Engine/Group.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Engine/Point.hpp"
 #include "MomoiBullet.hpp"
 
 class Turret;

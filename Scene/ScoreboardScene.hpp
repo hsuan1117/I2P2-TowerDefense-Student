@@ -11,16 +11,16 @@
 class ScoreboardScene final : public Engine::IScene {
 private:
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
-    Engine::Label *Lscb;
+    Engine::Label *Lscb = nullptr;
     std::string title_name = "Scoreboard - stage1";
 
 public:
     explicit ScoreboardScene() = default;
     void Initialize() override;
     void Terminate() override;
-    void PrevOnClick();
-    void NextOnClick();
-    void BackOnClick(int stage);
+    static void PrevOnClick();
+    static void NextOnClick();
+    static void BackOnClick(int stage);
     void Update(float deltaTime) override;
 };
 

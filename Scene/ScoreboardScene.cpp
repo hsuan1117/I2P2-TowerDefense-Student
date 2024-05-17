@@ -62,26 +62,26 @@ void ScoreboardScene::Initialize() {
 
     Engine::ImageButton* btn;
     btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH * 7 / 4 - 50, 400, 100);
-    btn->SetOnClickCallback(std::bind(&ScoreboardScene::BackOnClick, this, 1));
+    btn->SetOnClickCallback([this] { BackOnClick(1); });
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
 
     btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW * 1/3 - 200, halfH * 7 / 4 - 50 , 400, 100);
-    btn->SetOnClickCallback(std::bind(&ScoreboardScene::PrevOnClick, this));
+    btn->SetOnClickCallback([this] { PrevOnClick(); });
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Prev Page", "pirulen.ttf", 48, halfW * 1/3, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
 
     btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW * 5/3 - 200, halfH * 7 / 4 - 50, 400, 100);
-    btn->SetOnClickCallback(std::bind(&ScoreboardScene::NextOnClick, this));
+    btn->SetOnClickCallback([] { NextOnClick(); });
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Next Page", "pirulen.ttf", 48, halfW * 5/3, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
 
     btn = new Engine::ImageButton("stage-select/arrow_left.png", "stage-select/arrow_left_hovered.png", 1450, 20, 64, 64);
-    btn->SetOnClickCallback(std::bind(&AddScene, 1));
+    btn->SetOnClickCallback([] { AddScene(1); });
     AddNewControlObject(btn);
 
     btn = new Engine::ImageButton("stage-select/arrow_right.png", "stage-select/arrow_right_hovered.png", 1350, 20, 64, 64);
-    btn->SetOnClickCallback(std::bind(&AddScene, -1));
+    btn->SetOnClickCallback([] { AddScene(-1); });
     AddNewControlObject(btn);
 
 

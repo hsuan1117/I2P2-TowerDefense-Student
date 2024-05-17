@@ -27,7 +27,6 @@
 #include "Turret/TurretButton.hpp"
 #include "Enemy/FlameTank.hpp"
 #include "WinScene.hpp"
-#include "Engine/log.hpp"
 
 //ODO: Add shortcut key for momoi turret
 //TODO: Insert the point of scoreboard correctly
@@ -365,7 +364,7 @@ void PlayScene::ReadEnemyWave() {
 	float type, wait, repeat;
 	enemyWaveData.clear();
 	std::ifstream fin(filename);
-	while (1) {
+	while (true) {
 
         bool ts = (bool)(fin >> type);
         bool ws = (bool)(fin >> wait);
@@ -404,28 +403,28 @@ void PlayScene::ConstructUI() {
 		Engine::Sprite("play/turret-1.png", 1294, 136 - 8, 0, 0, 0, 0)
 		, 1294, 136, MachineGunTurret::Price);
 	// Reference: Class Member Function Pointer and std::bind.
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
+	btn->SetOnClickCallback([this] { UIBtnClicked(0); });
 	UIGroup->AddNewControlObject(btn);
 	// Button 2
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/tower-base.png", 1370, 136, 0, 0, 0, 0),
 		Engine::Sprite("play/turret-2.png", 1370, 136 - 8, 0, 0, 0, 0)
 		, 1370, 136, LaserTurret::Price);
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 1));
+	btn->SetOnClickCallback([this] { UIBtnClicked(1); });
 	UIGroup->AddNewControlObject(btn);
 	// Button 3
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/tower-base.png", 1446, 136, 0, 0, 0, 0),
 		Engine::Sprite("play/turret-3.png", 1446, 136, 0, 0, 0, 0)
 		, 1446, 136, MissileTurret::Price);
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 2));
+	btn->SetOnClickCallback([this] { UIBtnClicked(2); });
 	UIGroup->AddNewControlObject(btn);
     // Button 4
     btn = new TurretButton("play/floor.png", "play/dirt.png",
                            Engine::Sprite("play/tower-base.png", 1446+76, 136, 0, 0, 0, 0),
                            Engine::Sprite("play/momoi64x64.png", 1446+76, 136, 0, 0, 0, 0)
             , 1446+76, 136, MomoiTurret::Price);
-    btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 3));
+    btn->SetOnClickCallback([this] { UIBtnClicked(3); });
     UIGroup->AddNewControlObject(btn);
 
 	// ODO: [CUSTOM-TURRET]: Create a button to support constructing the turret.
@@ -470,8 +469,8 @@ bool PlayScene::CheckSpaceValid(int x, int y) {
 		return false;
 	for (auto& it : EnemyGroup->GetObjects()) {
 		Engine::Point pnt;
-		pnt.x = floor(it->Position.x / BlockSize);
-		pnt.y = floor(it->Position.y / BlockSize);
+		pnt.x = std::floor(it->Position.x / BlockSize);
+		pnt.y = std::floor(it->Position.y / BlockSize);
 		if (pnt.x < 0) pnt.x = 0;
 		if (pnt.x >= MapWidth) pnt.x = MapWidth - 1;
 		if (pnt.y < 0) pnt.y = 0;
@@ -495,7 +494,7 @@ std::vector<std::vector<int>> PlayScene::CalculateBFSDistance() {
 	// BFS from end point.
 	if (mapState[MapHeight - 1][MapWidth - 1] != TILE_DIRT)
 		return map;
-	que.push(Engine::Point(MapWidth - 1, MapHeight - 1));
+	que.emplace(MapWidth - 1, MapHeight - 1);
 	map[MapHeight - 1][MapWidth - 1] = 0;
 	while (!que.empty()) {
 		Engine::Point p = que.front();
@@ -533,19 +532,19 @@ std::vector<std::vector<int>> PlayScene::CalculateBFSDistance() {
 
 
         if (p.y-1 >= 0 && mapState[p.y-1][p.x] == TILE_DIRT && map[p.y-1][p.x] == -1) {
-            que.push(Engine::Point(p.x, p.y-1));
+            que.emplace(p.x, p.y-1);
             map[p.y-1][p.x] = -2;
         }
         if (p.x-1 >= 0 && mapState[p.y][p.x-1] == TILE_DIRT && map[p.y][p.x-1] == -1) {
-            que.push(Engine::Point(p.x-1, p.y));
+            que.emplace(p.x-1, p.y);
             map[p.y][p.x-1] = -2;
         }
         if (p.y+1 < MapHeight && mapState[p.y+1][p.x] == TILE_DIRT && map[p.y+1][p.x] == -1) {
-            que.push(Engine::Point(p.x, p.y+1));
+            que.emplace(p.x, p.y+1);
             map[p.y+1][p.x] = -2;
         }
         if (p.x+1 < MapWidth && mapState[p.y][p.x+1] == TILE_DIRT && map[p.y][p.x+1] == -1) {
-            que.push(Engine::Point(p.x+1, p.y));
+            que.emplace(p.x+1, p.y);
             map[p.y][p.x+1] = -2;
         }
 	}
