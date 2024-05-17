@@ -15,29 +15,25 @@ namespace Engine {
         if (!show) {
             return;
         }
-        const float scale = 0.7;
-
         //draw score
 
-
-        if (i < max_line-1) {
-            upper = i;
+        if (num_of_mem < max_line - 1) {
+            upper = num_of_mem;
         } else {
             upper = max_line-1;
         }
 
-        while (upper + ptr >= i) {
+        while (upper + ptr >= num_of_mem) {
             upper--;
         }
-
 
         for (int j = 0; j < upper + 1; j++) {
             char temp[100];
 
             if (j + ptr + 1 >= 10) {
-                sprintf_s(temp, 100, "%d      %s", j + ptr + 1, scb[j + ptr].name);
+                sprintf_s(temp, 100, "%d", j + ptr + 1);
             } else {
-                sprintf_s(temp, 100, " %d      %s", j + ptr + 1, scb[j + ptr].name);
+                sprintf_s(temp, 100, " %d", j + ptr + 1);
             }
 
             al_draw_text(
@@ -49,20 +45,38 @@ namespace Engine {
                     temp
             );
 
-            sprintf_s(temp, 100, "%d     %s", scb[j + ptr].score, scb[j + ptr].time);
+            al_draw_text(
+                    menuFont,
+                    al_map_rgb(r, g, b),
+                    x + 75,
+                    y + 50 * j,
+                    ALLEGRO_ALIGN_LEFT,
+                    scb[j + ptr].name
+            );
+
+            sprintf_s(temp, 100, "%d", scb[j + ptr].score);
 
             al_draw_text(
                     menuFont,
                     al_map_rgb(r, g, b),
-                    x+1200,
+                    x+700,
                     y + 50 * j,
                     ALLEGRO_ALIGN_RIGHT,
                     temp
             );
+
+            al_draw_text(
+                    menuFont,
+                    al_map_rgb(r, g, b),
+                    x+800,
+                    y + 50 * j,
+                    ALLEGRO_ALIGN_LEFT,
+                    scb[j + ptr].time
+            );
         }
     }
 
-    void Scoreboard::AddNew(std::string username, int points) {
+    void Scoreboard::AddNew(const std::string& username, int points) {
         FILE* score;
 
         if (remove(path.c_str()) == 0)
@@ -86,41 +100,40 @@ namespace Engine {
 
         bool flag = true;
 
-        for (int i = 0; i < get_num(); i++)
+        for (int j = 0; j < get_num(); j++)
         {
-            if (points > scb[i].score && flag)
+            if (points > scb[j].score && flag)
             {
                 fprintf_s(score, "%s %d %s\n", username.c_str(), points, GetCurrentTime());
                 Engine::LOG(Engine::INFO) << username << points;
                 flag = false;
-                fprintf_s(score, "%s %d %s\n", scb[i].name, scb[i].score, scb[i].time);
-                Engine::LOG(Engine::INFO) << i;
+                fprintf_s(score, "%s %d %s\n", scb[j].name, scb[j].score, scb[j].time);
+                Engine::LOG(Engine::INFO) << j;
                 continue;
             }
 
-            fprintf_s(score, "%s %d %s\n", scb[i].name, scb[i].score, scb[i].time);
+            fprintf_s(score, "%s %d %s\n", scb[j].name, scb[j].score, scb[j].time);
         }
 
         if (flag)
         {
             fprintf_s(score, "%s %d %s\n", username.c_str(), points, GetCurrentTime());
-            flag = false;
         }
 
-        ++i;
+        ++num_of_mem;
 
         fclose(score);
     }
 
     void Scoreboard::PtrInc() {
         ++ptr;
-        if (ptr >= i-1) {
-            ptr = i-1;
+        if (ptr >= num_of_mem - 1) {
+            ptr = num_of_mem - 1;
         }
     }
 
     void Scoreboard::NextPage() {
-        if (ptr + max_line < i) {
+        if (ptr + max_line < num_of_mem) {
             ptr += max_line;
         }
     }
@@ -142,31 +155,15 @@ namespace Engine {
     void Scoreboard::OnMouseScroll(int mx, int my, int delta) {
         if (!show) {
             return;
-        }
-
-        if (delta > 0)
-        {
-            //Engine::LOG(INFO) << "Mouse Wheel UP!";
-            ptr--;
-            if (ptr < 0)
-            {
-                ptr = 0;
-            }
-        }
-
-        if (delta < 0)
-        {
-            //Engine::LOG(INFO) << "Mouse Wheel DOWN!";
-            ptr++;
-            if (ptr >= i)
-            {
-                ptr = i - 1;
-            }
+        } else if (delta > 0) {
+            PtrDec();
+        } else if (delta < 0) {
+            PtrInc();
         }
     }
 
     int Scoreboard::get_num() const {
-        return i;
+        return num_of_mem;
     }
 
     void Scoreboard::MakeShow() {

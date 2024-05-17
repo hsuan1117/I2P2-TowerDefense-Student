@@ -7,6 +7,7 @@
 #include <allegro5/bitmap.h>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include "Engine/IObject.hpp"
 #include "Engine/LOG.hpp"
@@ -31,7 +32,7 @@ namespace Engine {
         int x;
         int y;
 
-        int i;
+        int num_of_mem;
 
         int ptr;
 
@@ -48,7 +49,7 @@ namespace Engine {
     public:
         ScoreBoardInstance* scb;
 
-        Scoreboard(std::string _path, int _x, int _y, int _r, int _g, int _b) : path(_path), x(_x), y(_y), i(0), scb(), ptr(0), n(99), r(_r), g(_g), b(_b)
+        Scoreboard(std::string _path, int _x, int _y, int _r, int _g, int _b) : path(std::move(_path)), x(_x), y(_y), num_of_mem(0), scb(), ptr(0), n(99), r(_r), g(_g), b(_b)
         {
             menuFont = al_load_font("Resource/fonts/pirulen.ttf", 30, 0);
 
@@ -57,12 +58,12 @@ namespace Engine {
 
             scb = static_cast<ScoreBoardInstance *>(malloc(sizeof(ScoreBoardInstance) * n));
 
-            while (n > 1 && scb == NULL)
+            while (n > 1 && scb == nullptr)
             {
                 scb = static_cast<ScoreBoardInstance *>(malloc(sizeof(ScoreBoardInstance) * --n));
             }
 
-            if (scb == NULL)
+            if (scb == nullptr)
             {
                 Engine::LOG(Engine::ERROR) << "scoreboard memory alloc failed";
             }
@@ -82,11 +83,11 @@ namespace Engine {
             }
 
 
-            for (i; i < n; i++)
+            for (; num_of_mem < n; num_of_mem++)
             {
-                if (fscanf_s(score, "%s%d%s", scb[i].name, sizeof(char) * 100, &scb[i].score, scb[i].time, sizeof(char) * 30) == 3)
+                if (fscanf_s(score, "%s%d%s", scb[num_of_mem].name, sizeof(char) * 100, &scb[num_of_mem].score, scb[num_of_mem].time, sizeof(char) * 30) == 3)
                 {
-                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score << " " << scb[i].time;
+                    Engine::LOG(Engine::INFO) << "scoreboard read:" << scb[num_of_mem].name << " " << scb[num_of_mem].score << " " << scb[num_of_mem].time;
                 }
                 else
                 {
@@ -98,7 +99,7 @@ namespace Engine {
             fclose(score);
         }
 
-        Scoreboard(std::string _path, int _x, int _y) : path(_path), x(_x), y(_y), i(0), scb(), ptr(0), n(99), r(255), g(255), b(255)
+        Scoreboard(std::string _path, int _x, int _y) : path(std::move(_path)), x(_x), y(_y), num_of_mem(0), scb(), ptr(0), n(99), r(255), g(255), b(255)
         {
             menuFont = al_load_font("Resource/fonts/pirulen.ttf", 30, 0);
 
@@ -107,12 +108,12 @@ namespace Engine {
 
             scb = static_cast<ScoreBoardInstance *>(malloc(sizeof(ScoreBoardInstance) * n));
 
-            while (n > 1 && scb == NULL)
+            while (n > 1 && scb == nullptr)
             {
                 scb = static_cast<ScoreBoardInstance *>(malloc(sizeof(ScoreBoardInstance) * --n));
             }
 
-            if (scb == NULL)
+            if (scb == nullptr)
             {
                 Engine::LOG(Engine::ERROR) << "scoreboard memory alloc failed";
             }
@@ -132,11 +133,11 @@ namespace Engine {
             }
 
 
-            for (i; i < n; i++)
+            for (; num_of_mem < n; num_of_mem++)
             {
-                if (fscanf_s(score, "%s%d%s", scb[i].name, sizeof(char) * 100, &scb[i].score, scb[i].time, sizeof(char) * 30) == 3)
+                if (fscanf_s(score, "%s%d%s", scb[num_of_mem].name, sizeof(char) * 100, &scb[num_of_mem].score, scb[num_of_mem].time, sizeof(char) * 30) == 3)
                 {
-                    Engine::LOG(Engine::INFO) << "scoreboard read:" <<  scb[i].name << " " << scb[i].score << " " << scb[i].time;
+                    Engine::LOG(Engine::INFO) << "scoreboard read:" << scb[num_of_mem].name << " " << scb[num_of_mem].score << " " << scb[num_of_mem].time;
                 }
                 else
                 {
@@ -148,14 +149,14 @@ namespace Engine {
             fclose(score);
         }
 
-        ~Scoreboard()
+        ~Scoreboard() override
         {
             free(scb);
         }
 
         void Draw() const override;
 
-        void AddNew(std::string username, int points);
+        void AddNew(const std::string& username, int points);
 
         void PtrInc();
         void NextPage();
