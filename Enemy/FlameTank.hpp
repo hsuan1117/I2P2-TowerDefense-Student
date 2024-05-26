@@ -12,6 +12,7 @@ class FlameTank : public Enemy {
 private:
     Sprite head;
     float targetRotation;
+    float count;
 public:
     FlameTank(int x, int y);
     void Draw() const override;

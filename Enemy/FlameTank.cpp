@@ -4,15 +4,16 @@
 #include <allegro5/base.h>
 #include <random>
 
+#include "Scene/PlayScene.hpp"
+
 #include "Engine/Point.hpp"
 #include "FlameTank.hpp"
 
-FlameTank::FlameTank(int x, int y) : Enemy("play/enemy-6.png", x, y, 25, 28, 500, 100),
-                                     head("play/enemy-2.png", x, y), targetRotation(0) {
+FlameTank::FlameTank(int x, int y) : Enemy("play/enemy-6.png", x, y, 25, 30, 175, 20),
+                                     head("play/enemy-2.png", x, y), targetRotation(0), count(0.0f) {
 }
 void FlameTank::Draw() const {
     Enemy::Draw();
-    //head.Draw();
 }
 void FlameTank::Update(float deltaTime) {
     Enemy::Update(deltaTime);
@@ -28,4 +29,12 @@ void FlameTank::Update(float deltaTime) {
         targetRotation = distRadian(rng);
     }
     head.Rotation = (head.Rotation + deltaTime * targetRotation) / (1 + deltaTime);
+
+    count += deltaTime;
+
+    if (count >= 2.0f) {
+        count = 0;
+        getPlayScene()->EarnMoney(-10);
+        money += 6;
+    }
 }

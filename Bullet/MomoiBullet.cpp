@@ -10,7 +10,9 @@
 class Turret;
 
 MomoiBullet::MomoiBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent) :
-        Bullet("play/bullet-momoi.png", 400, 2, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+        Bullet("play/bullet-momoi.png", 1500, 250, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+    CollisionRadius = 8;
+
 }
 void MomoiBullet::OnExplode(Enemy* enemy) {
     std::random_device dev;
