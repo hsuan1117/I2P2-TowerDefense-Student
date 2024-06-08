@@ -9,21 +9,41 @@
 #include <memory>
 #include "Engine/IScene.hpp"
 #include "UI/Component/Label.hpp"
+#include "UI/Component/Image.hpp"
 #include <queue>
 #include <vector>
+#include <unordered_map>
+#include "UI/Component/RefImage.hpp"
 
 void UpdateText(std::queue<std::list<std::string>>& queue_of_text, std::string& text, std::string& name);
 
 class PlotScene final : public Engine::IScene {
 private:
+    struct image_info {
+        std::shared_ptr<Engine::RefImage> img;
+        std::string path;
+        int w;
+        int h;
+
+        image_info(std::string p, int ww, int hh ): path(p), w(ww), h(hh) {
+            img = std::make_shared<Engine::RefImage>("plot/transparent.png",0, 0, w, h, 0, 0);
+        }
+    };
+
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     Engine::Label *pText = nullptr;
     Engine::Label *pName = nullptr;
     std::string text;
     std::string name;
 
+    std::unordered_map<std::string, image_info> image_map;
+
     std::queue<std::vector<std::string>> queue_of_text;
     size_t line_number = 0;
+
+    int test_w = 100;
+
+    Engine::RefImage* test_ref_image;
 
 public:
     explicit PlotScene() = default;

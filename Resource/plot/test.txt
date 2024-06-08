@@ -1,3 +1,5 @@
+image Kuo "plot/Kuo.png" size 300 300
+Plot_Start:
 ABlackCat "What should I do?"
 ABlackCat "Maybe I should write code"
 NULL "Writing Code..."
