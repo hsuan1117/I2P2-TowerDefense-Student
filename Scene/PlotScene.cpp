@@ -38,7 +38,13 @@ void PlotScene::Initialize() {
             } else if (words[0] == "hide") {
                 image_map[words[1]].img->ChangeImageTo("plot/transparent.png", 0, 0);
             } else if (words[0] == "play") {
-                al_play_sample(music_map[words[1]], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE::ALLEGRO_PLAYMODE_ONCE, nullptr);
+                al_play_sample(music_map[words[1]].sample, 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE::ALLEGRO_PLAYMODE_ONCE, &music_map[words[1]].id);
+
+            } else if (words[0] == "stop") {
+                auto temp = music_map[words[1]].id;
+                if (&temp != nullptr) {
+                    al_stop_sample(&temp);
+                }
             } else {
                 break;
             }
@@ -103,7 +109,8 @@ void PlotScene::Initialize() {
             if (sam == nullptr) {
                 Engine::LOG(Engine::ERROR) << "Plot Audio Load Failed";
             }
-            music_map.emplace(words[1], sam);
+            audio_info a = {sam, 0};
+            music_map.emplace(words[1], a);
         } else {
             Engine::LOG(Engine::ERROR) << "Plot Pre-Processing Syntax Error";
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
@@ -185,7 +192,7 @@ void PlotScene::Terminate() {
     //AudioHelper::StopSample(bgmInstance);
     al_stop_samples();
     for (auto i : music_map) {
-        al_destroy_sample(i.second);
+        al_destroy_sample(i.second.sample);
     }
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();

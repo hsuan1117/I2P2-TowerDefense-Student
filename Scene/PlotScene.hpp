@@ -30,6 +30,11 @@ private:
         }
     };
 
+    struct audio_info {
+        ALLEGRO_SAMPLE* sample;
+        ALLEGRO_SAMPLE_ID id;
+    };
+
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     Engine::Label *pText = nullptr;
     Engine::Label *pName = nullptr;
@@ -37,7 +42,7 @@ private:
     std::string name;
 
     std::unordered_map<std::string, image_info> image_map;
-    std::unordered_map<std::string, ALLEGRO_SAMPLE*> music_map;
+    std::unordered_map<std::string, audio_info> music_map;
 
     std::queue<std::vector<std::string>> queue_of_text;
 

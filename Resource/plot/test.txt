@@ -1,5 +1,6 @@
 image Kuo "plot/Kuo.jpg" size 300 400
 audio gun "gun2.ogg"
+audio bs "BeyondSunshine.ogg"
 
 Plot_Start:
 
@@ -12,3 +13,7 @@ System "Show Kuo at 200 0"
 hide Kuo
 play gun
 System "oops"
+play bs
+MP3_Player "Playing Beyond Sunshine by ABlackCat. Click to stop."
+stop bs
+MP3_Player "Audio Stopped!"
