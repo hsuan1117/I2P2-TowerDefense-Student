@@ -104,6 +104,8 @@ add_executable(TowerDefense
         Bullet/MomoiBullet.hpp
         Utility/TimeHelper.cpp
         Utility/TimeHelper.hpp
+        Scene/PlotScene.cpp
+        Scene/PlotScene.hpp
         #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )
