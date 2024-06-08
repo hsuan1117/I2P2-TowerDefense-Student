@@ -25,11 +25,10 @@ private:
         int w;
         int h;
 
-        image_info(std::string p, int ww, int hh ): path(p), w(ww), h(hh) {
+        void SetDftImage(){
             img = std::make_shared<Engine::RefImage>("plot/transparent.png",0, 0, w, h, 0, 0);
         }
     };
-
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     Engine::Label *pText = nullptr;
     Engine::Label *pName = nullptr;

@@ -31,14 +31,36 @@ void PlotScene::Initialize() {
     int halfH = h / 2;
 
     auto onClickCallback = [this]{
+        while (!queue_of_text.empty()) {
+            auto words = queue_of_text.front();
+            if (words[0] == "show") {
+                image_map[words[1]].img->ChangeImageTo(image_map[words[1]].path, atoi(words[3].c_str()), atoi(words[4].c_str()));
+            } else if (words[0] == "hide") {
+                image_map[words[1]].img->ChangeImageTo("plot/transparent.png", 0, 0);
+            } else {
+                break;
+            }
+            queue_of_text.pop();
+        }
         if (!queue_of_text.empty()) {
-            name = queue_of_text.front()[0];
-            text = queue_of_text.front()[1];
+            auto temp = queue_of_text.front();
+            name = temp[0];
+            text = temp[1];
             queue_of_text.pop();
         } else {
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
         }
         test_w += 100;
+//        if (test_w == 300) {
+//            for (auto i : image_map) {
+//                i.second.img->ChangeImageTo(i.second.path, 400, 400);
+//            }
+//        }
+//        if (test_w == 400) {
+//            for (auto i : image_map) {
+//                i.second.img->ChangeImageTo("plot/transparent.png", 400, 400);
+//            }
+//        }
 
     };
 
@@ -75,7 +97,8 @@ void PlotScene::Initialize() {
                 words[2].erase(0,1);
                 words[2].erase(words[2].size()-1, 1);
             }
-            image_info i = {words[2], atoi(words[4].c_str()), atoi(words[5].c_str())};
+            image_info i = {nullptr, words[2], atoi(words[4].c_str()), atoi(words[5].c_str())};
+            i.SetDftImage();
             image_map.emplace(words[1], i);
         } else if (words[0] == "audio") {
 
@@ -86,31 +109,56 @@ void PlotScene::Initialize() {
     }
     // Reading Script
     while (std::getline(plot, line)) {
+
+        if (line == "") {
+            continue;
+        }
+
         std::vector<std::string> words;
         splitLine(line, words);
 
         std::vector<std::string> out;
 
         // check syntax
-
-        line.erase(0, words[0].size()+1);
-
-        if (words[0] == "NULL") {
-            words[0] = "";
-        }
-        out.push_back(words[0]);
-
-        if (line[0] != '"' || line[line.size()-1] != '"') {
-            Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+        if (words[0] == "show") {
+            if (words.size() != 5) {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+            } else if (words.size() >= 3 && words[2] != "at") {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+            }
+            for (auto i : words) {
+                out.push_back(i);
+            }
+        } else if (words[0] == "hide") {
+            if (words.size() != 2) {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+            }
+            for (auto i : words) {
+                out.push_back(i);
+            }
         } else {
-            line.erase(0,1);
-            line.erase(line.size()-1, 1);
-        }
-        out.push_back(line);
+            line.erase(0, words[0].size() + 1);
 
+            if (words[0] == "NULL") {
+                words[0] = "";
+            }
+            out.push_back(words[0]);
+
+            if (line[0] != '"' || line[line.size() - 1] != '"') {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+            } else {
+                line.erase(0, 1);
+                line.erase(line.size() - 1, 1);
+            }
+            out.push_back(line);
+        }
         queue_of_text.emplace(out);
     }
     onClickCallback();
+
+    for (auto i : image_map) {
+        AddRefObject(*i.second.img);
+    }
 
     pText = new Engine::Label(&text, "pirulen.ttf", 32, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
     AddRefObject(*pText);

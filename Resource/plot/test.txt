@@ -1,6 +1,12 @@
-image Kuo "plot/Kuo.png" size 300 300
+image Kuo "plot/Kuo.jpg" size 300 400
+
 Plot_Start:
+
 ABlackCat "What should I do?"
 ABlackCat "Maybe I should write code"
 NULL "Writing Code..."
 Console "Hello I2P Final Project!!!"
+show Kuo at 200 0
+System "Show Kuo at 200 0"
+hide Kuo
+System "hide Kuo"
