@@ -30,6 +30,9 @@ void PlotScene::Initialize() {
     int halfW = w / 2;
     int halfH = h / 2;
 
+    music_map.clear();
+    image_map.clear();
+
     auto onClickCallback = [this]{
         while (!queue_of_text.empty()) {
             auto words = queue_of_text.front();
@@ -72,6 +75,7 @@ void PlotScene::Initialize() {
 
     // Pre Processing
     while (std::getline(plot, line)) {
+        Engine::LOG(Engine::INFO) << "Plot: " << line;
 
         if (line == "Plot_Start:") {
             break;
@@ -86,7 +90,7 @@ void PlotScene::Initialize() {
         // check syntex
         if (words[0] == "image" && words.size() == 6) {
             if (words[2][0] != '"' || words[2][words[2].size()-1] != '"') {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error at 90";
                 Engine::GameEngine::GetInstance().ChangeScene("stage-select");
             } else {
                 words[2].erase(0,1);
@@ -97,7 +101,7 @@ void PlotScene::Initialize() {
             image_map.emplace(words[1], i);
         } else if (words[0] == "audio" && words.size() == 3) {
             if (words[2][0] != '"' || words[2][words[2].size()-1] != '"') {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error at 101";
                 Engine::GameEngine::GetInstance().ChangeScene("stage-select");
             } else {
                 words[2].erase(0,1);
@@ -107,18 +111,18 @@ void PlotScene::Initialize() {
             fullpath += words[2];
             auto sam = al_load_sample(fullpath.c_str());
             if (sam == nullptr) {
-                Engine::LOG(Engine::ERROR) << "Plot Audio Load Failed";
+                Engine::LOG(Engine::ERROR) << "Plot Audio Load Failed 111";
             }
             audio_info a = {sam, 0};
             music_map.emplace(words[1], a);
         } else {
-            Engine::LOG(Engine::ERROR) << "Plot Pre-Processing Syntax Error";
+            Engine::LOG(Engine::ERROR) << "Plot Pre-Processing Syntax Error 116";
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
         }
     }
     // Reading Script
     while (std::getline(plot, line)) {
-
+        Engine::LOG(Engine::INFO) << "Plot: " << line;
         if (line == "") {
             continue;
         }
@@ -131,16 +135,30 @@ void PlotScene::Initialize() {
         // check syntax
         if (words[0] == "show") {
             if (words.size() != 5) {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 135";
             } else if (words.size() >= 3 && words[2] != "at") {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 137";
             }
             for (auto i : words) {
                 out.push_back(i);
             }
         } else if (words[0] == "hide") {
             if (words.size() != 2) {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 144";
+            }
+            for (auto i : words) {
+                out.push_back(i);
+            }
+        } else if (words[0] == "play") {
+            if (words.size() != 2) {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 151";
+            }
+            for (auto i : words) {
+                out.push_back(i);
+            }
+        } else if (words[0] == "stop") {
+            if (words.size() != 2) {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 158";
             }
             for (auto i : words) {
                 out.push_back(i);
@@ -154,7 +172,7 @@ void PlotScene::Initialize() {
             out.push_back(words[0]);
 
             if (line[0] != '"' || line[line.size() - 1] != '"') {
-                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error 172";
             } else {
                 line.erase(0, 1);
                 line.erase(line.size() - 1, 1);
@@ -179,7 +197,7 @@ void PlotScene::Initialize() {
     btn->SetOnClickCallback([] { Engine::GameEngine::GetInstance().ChangeScene("stage-select"); });
     AddNewControlObject(btn);
 
-
+    plot.close();
 
     // Not safe if release resource while playing, however we only free while change scene, so it's fine.
     //bgmInstance = AudioHelper::PlaySample("BeyondSunshine.ogg", true, AudioHelper::BGMVolume);
