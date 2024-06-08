@@ -106,6 +106,8 @@ add_executable(TowerDefense
         Utility/TimeHelper.hpp
         Scene/PlotScene.cpp
         Scene/PlotScene.hpp
+        UI/Component/RefImage.cpp
+        UI/Component/RefImage.hpp
         #        UI/Component/TextInput.cpp
 #        UI/Component/TextInput.hpp
 )
