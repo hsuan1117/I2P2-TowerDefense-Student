@@ -1,4 +1,5 @@
 image Kuo "plot/Kuo.jpg" size 300 400
+audio gun "gun2.ogg"
 
 Plot_Start:
 
@@ -9,4 +10,5 @@ Console "Hello I2P Final Project!!!"
 show Kuo at 200 0
 System "Show Kuo at 200 0"
 hide Kuo
-System "hide Kuo"
+play gun
+System "oops"

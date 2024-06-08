@@ -29,6 +29,7 @@ private:
             img = std::make_shared<Engine::RefImage>("plot/transparent.png",0, 0, w, h, 0, 0);
         }
     };
+
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     Engine::Label *pText = nullptr;
     Engine::Label *pName = nullptr;
@@ -36,13 +37,9 @@ private:
     std::string name;
 
     std::unordered_map<std::string, image_info> image_map;
+    std::unordered_map<std::string, ALLEGRO_SAMPLE*> music_map;
 
     std::queue<std::vector<std::string>> queue_of_text;
-    size_t line_number = 0;
-
-    int test_w = 100;
-
-    Engine::RefImage* test_ref_image;
 
 public:
     explicit PlotScene() = default;

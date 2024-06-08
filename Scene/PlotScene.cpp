@@ -37,6 +37,8 @@ void PlotScene::Initialize() {
                 image_map[words[1]].img->ChangeImageTo(image_map[words[1]].path, atoi(words[3].c_str()), atoi(words[4].c_str()));
             } else if (words[0] == "hide") {
                 image_map[words[1]].img->ChangeImageTo("plot/transparent.png", 0, 0);
+            } else if (words[0] == "play") {
+                al_play_sample(music_map[words[1]], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE::ALLEGRO_PLAYMODE_ONCE, nullptr);
             } else {
                 break;
             }
@@ -50,21 +52,7 @@ void PlotScene::Initialize() {
         } else {
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
         }
-        test_w += 100;
-//        if (test_w == 300) {
-//            for (auto i : image_map) {
-//                i.second.img->ChangeImageTo(i.second.path, 400, 400);
-//            }
-//        }
-//        if (test_w == 400) {
-//            for (auto i : image_map) {
-//                i.second.img->ChangeImageTo("plot/transparent.png", 400, 400);
-//            }
-//        }
-
     };
-
-
 
     Engine::ImageButton* btn;
 
@@ -93,6 +81,7 @@ void PlotScene::Initialize() {
         if (words[0] == "image" && words.size() == 6) {
             if (words[2][0] != '"' || words[2][words[2].size()-1] != '"') {
                 Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::GameEngine::GetInstance().ChangeScene("stage-select");
             } else {
                 words[2].erase(0,1);
                 words[2].erase(words[2].size()-1, 1);
@@ -100,8 +89,21 @@ void PlotScene::Initialize() {
             image_info i = {nullptr, words[2], atoi(words[4].c_str()), atoi(words[5].c_str())};
             i.SetDftImage();
             image_map.emplace(words[1], i);
-        } else if (words[0] == "audio") {
-
+        } else if (words[0] == "audio" && words.size() == 3) {
+            if (words[2][0] != '"' || words[2][words[2].size()-1] != '"') {
+                Engine::LOG(Engine::ERROR) << "Plot Script Syntax Error";
+                Engine::GameEngine::GetInstance().ChangeScene("stage-select");
+            } else {
+                words[2].erase(0,1);
+                words[2].erase(words[2].size()-1, 1);
+            }
+            std::string fullpath = "Resource/audios/";
+            fullpath += words[2];
+            auto sam = al_load_sample(fullpath.c_str());
+            if (sam == nullptr) {
+                Engine::LOG(Engine::ERROR) << "Plot Audio Load Failed";
+            }
+            music_map.emplace(words[1], sam);
         } else {
             Engine::LOG(Engine::ERROR) << "Plot Pre-Processing Syntax Error";
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
@@ -173,15 +175,18 @@ void PlotScene::Initialize() {
 
 
     // Not safe if release resource while playing, however we only free while change scene, so it's fine.
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
+    //bgmInstance = AudioHelper::PlaySample("BeyondSunshine.ogg", true, AudioHelper::BGMVolume);
 }
 void PlotScene::Update(float deltaTime) {
     //title_name = (std::string)"Scoreboard - " + "stage" + (char)(scene + '0')/* + (money_or_life == 0 ? ":Money" : ":Life")*/;
 }
 
 void PlotScene::Terminate() {
-    AudioHelper::StopSample(bgmInstance);
+    //AudioHelper::StopSample(bgmInstance);
+    al_stop_samples();
+    for (auto i : music_map) {
+        al_destroy_sample(i.second);
+    }
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
-    delete test_ref_image;
     IScene::Terminate();
 }
