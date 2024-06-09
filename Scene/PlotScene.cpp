@@ -214,4 +214,8 @@ void PlotScene::Terminate() {
     }
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
+
+    while (!queue_of_text.empty()) {
+        queue_of_text.pop();
+    }
 }
