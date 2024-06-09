@@ -4,6 +4,7 @@ audio bs "BeyondSunshine.ogg"
 
 Plot_Start:
 
+middle "at a very very cold and lonely night......"
 ABlackCat "What should I do?"
 ABlackCat "Maybe I should write code"
 NULL "Writing Code..."
@@ -12,6 +13,7 @@ show Kuo at 200 0
 System "Show Kuo at 200 0"
 hide Kuo
 play gun
+middle "(Gun Sound)"
 System "oops"
 play bs
 MP3_Player "Playing Beyond Sunshine by ABlackCat. Click to stop."

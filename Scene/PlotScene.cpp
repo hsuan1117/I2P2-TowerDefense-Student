@@ -33,7 +33,19 @@ void PlotScene::Initialize() {
     music_map.clear();
     image_map.clear();
 
+    text = "";
+    name = "";
+    middle_text = "";
+
     auto onClickCallback = [this]{
+        if (partial_text != text) {
+            partial_text = text;
+            return;
+        } else if (partial_middle_text != middle_text) {
+            partial_middle_text = middle_text;
+            return;
+        }
+
         while (!queue_of_text.empty()) {
             auto words = queue_of_text.front();
             if (words[0] == "show") {
@@ -42,7 +54,6 @@ void PlotScene::Initialize() {
                 image_map[words[1]].img->ChangeImageTo("plot/transparent.png", 0, 0);
             } else if (words[0] == "play") {
                 al_play_sample(music_map[words[1]].sample, 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE::ALLEGRO_PLAYMODE_ONCE, &music_map[words[1]].id);
-
             } else if (words[0] == "stop") {
                 auto temp = music_map[words[1]].id;
                 if (&temp != nullptr) {
@@ -55,8 +66,19 @@ void PlotScene::Initialize() {
         }
         if (!queue_of_text.empty()) {
             auto temp = queue_of_text.front();
-            name = temp[0];
-            text = temp[1];
+            if (temp[0] != "middle") {
+                name = temp[0];
+                text = temp[1];
+                middle_text = "";
+                partial_text = "";
+                partial_middle_text = "";
+            } else {
+                name = "";
+                text = "";
+                middle_text = temp[1];
+                partial_text = "";
+                partial_middle_text = "";
+            }
             queue_of_text.pop();
         } else {
             Engine::GameEngine::GetInstance().ChangeScene("stage-select");
@@ -187,11 +209,14 @@ void PlotScene::Initialize() {
         AddRefObject(*i.second.img);
     }
 
-    pText = new Engine::Label(&text, "pirulen.ttf", 32, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
+    pText = new Engine::Label(&partial_text, "pirulen.ttf", 32, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
     AddRefObject(*pText);
 
     pName = new Engine::Label(&name, "pirulen.ttf", 32, 150, 575, 220, 220, 255, 220, 0.5, 0.5);
     AddRefObject(*pName);
+
+    pMiddleText = new Engine::Label(&partial_middle_text, "pirulen.ttf", 40, 150, 200, 255, 255, 255, 255, 0.5, 0.5);
+    AddRefObject(*pMiddleText);
 
     btn = new Engine::ImageButton("stage-select/arrow_left.png", "stage-select/arrow_left_hovered.png", 1350, 20, 64, 64);
     btn->SetOnClickCallback([] { Engine::GameEngine::GetInstance().ChangeScene("stage-select"); });
@@ -199,11 +224,27 @@ void PlotScene::Initialize() {
 
     plot.close();
 
+    time = 0.0f;
+
     // Not safe if release resource while playing, however we only free while change scene, so it's fine.
     //bgmInstance = AudioHelper::PlaySample("BeyondSunshine.ogg", true, AudioHelper::BGMVolume);
 }
 void PlotScene::Update(float deltaTime) {
-    //title_name = (std::string)"Scoreboard - " + "stage" + (char)(scene + '0')/* + (money_or_life == 0 ? ":Money" : ":Life")*/;
+    time += deltaTime;
+    if (time > 0.04) {
+        time -= 0.04;
+        if (text != partial_text) {
+            partial_text += text[partial_text.size()];
+            if (text[partial_text.size()] == ' ') {
+                partial_text += ' ';
+            }
+        } else if (middle_text != partial_middle_text) {
+            partial_middle_text += middle_text[partial_middle_text.size()];
+            if (middle_text[partial_middle_text.size()] == ' ') {
+                partial_middle_text += ' ';
+            }
+        }
+    }
 }
 
 void PlotScene::Terminate() {

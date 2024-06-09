@@ -37,14 +37,21 @@ private:
 
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     Engine::Label *pText = nullptr;
+    Engine::Label *pMiddleText = nullptr;
     Engine::Label *pName = nullptr;
     std::string text;
+    std::string middle_text;
     std::string name;
+
+    std::string partial_text;
+    std::string partial_middle_text;
 
     std::unordered_map<std::string, image_info> image_map;
     std::unordered_map<std::string, audio_info> music_map;
 
     std::queue<std::vector<std::string>> queue_of_text;
+
+    float time;
 
 public:
     explicit PlotScene() = default;
