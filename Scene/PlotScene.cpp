@@ -209,13 +209,13 @@ void PlotScene::Initialize() {
         AddRefObject(*i.second.img);
     }
 
-    pText = new Engine::Label(&partial_text, "pirulen.ttf", 32, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
+    pText = new Engine::Label(&partial_text, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
     AddRefObject(*pText);
 
-    pName = new Engine::Label(&name, "pirulen.ttf", 32, 150, 575, 220, 220, 255, 220, 0.5, 0.5);
+    pName = new Engine::Label(&name, "BoutiqueBitmap7x7_1.7.ttf", 48, 150, 575, 220, 220, 255, 220, 0.5, 0.5);
     AddRefObject(*pName);
 
-    pMiddleText = new Engine::Label(&partial_middle_text, "pirulen.ttf", 40, 150, 200, 255, 255, 255, 255, 0.5, 0.5);
+    pMiddleText = new Engine::Label(&partial_middle_text, "BoutiqueBitmap7x7_1.7.ttf", 56, 150, 200, 255, 255, 255, 255, 0.5, 0.5);
     AddRefObject(*pMiddleText);
 
     btn = new Engine::ImageButton("stage-select/arrow_left.png", "stage-select/arrow_left_hovered.png", 1350, 20, 64, 64);
