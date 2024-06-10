@@ -33,13 +33,22 @@ void PlotScene::Initialize() {
     music_map.clear();
     image_map.clear();
 
-    text = "";
+    text_target = "";
     name = "";
     middle_text = "";
+    partial_text = "";
+    partial_text1 = "";
+    partial_text2 = "";
+    partial_text3 = "";
+    partial_text4 = "";
 
     auto onClickCallback = [this]{
-        if (partial_text != text) {
-            partial_text = text;
+        if (partial_text != text_target) {
+            partial_text = text_target;
+            partial_text1 = partial_target1;
+            partial_text2 = partial_target2;
+            partial_text3 = partial_target3;
+            partial_text4 = partial_target4;
             return;
         } else if (partial_middle_text != middle_text) {
             partial_middle_text = middle_text;
@@ -51,7 +60,7 @@ void PlotScene::Initialize() {
             if (words[0] == "show") {
                 image_map[words[1]].img->ChangeImageTo(image_map[words[1]].path, atoi(words[3].c_str()), atoi(words[4].c_str()));
             } else if (words[0] == "hide") {
-                image_map[words[1]].img->ChangeImageTo("plot/transparent.png", 0, 0);
+                image_map[words[1]].img->ChangeImageTo(transparent, 0, 0);
             } else if (words[0] == "play") {
                 al_play_sample(music_map[words[1]].sample, 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE::ALLEGRO_PLAYMODE_ONCE, &music_map[words[1]].id);
             } else if (words[0] == "stop") {
@@ -68,16 +77,65 @@ void PlotScene::Initialize() {
             auto temp = queue_of_text.front();
             if (temp[0] != "middle") {
                 name = temp[0];
-                text = temp[1];
+                text_target = temp[1];
                 middle_text = "";
                 partial_text = "";
+                partial_text1 = "";
+                partial_text2 = "";
+                partial_text3 = "";
+                partial_text4 = "";
                 partial_middle_text = "";
+
+                whole_words.clear();
+                splitLine(text_target, whole_words);
+                partial_target1 = "";
+                partial_target2 = "";
+                partial_target3 = "";
+                partial_target4 = "";
+                int count = 0;
+                for (;count < whole_words.size() && partial_target1.size() + whole_words[count].size() <= 50; ++count) {
+                    partial_target1 += whole_words[count];
+                    partial_target1 += ' ';
+                }
+                for (;count < whole_words.size() && partial_target2.size() + whole_words[count].size() <= 50; ++count) {
+                    partial_target2 += whole_words[count];
+                    partial_target2 += ' ';
+                }
+                for (;count < whole_words.size() && partial_target3.size() + whole_words[count].size() <= 50; ++count) {
+                    partial_target3 += whole_words[count];
+                    partial_target3 += ' ';
+                }
+                for (;count < whole_words.size() && partial_target4.size() + whole_words[count].size() <= 50; ++count) {
+                    partial_target4 += whole_words[count];
+                    partial_target4 += ' ';
+                }
+
+                if (count != whole_words.size()) {
+                    Engine::LOG(Engine::ERROR) << "Script too long, cannot be fully presented";
+                }
+
+                history_info.push_back({name, partial_target1});
+                if (partial_target2 != "") {
+                    history_info.push_back({"", partial_target2});
+                    if (partial_target3 != "") {
+                        history_info.push_back({"", partial_target3});
+                        if (partial_target4 != "") {
+                            history_info.push_back({"", partial_target4});
+                        }
+                    }
+                }
             } else {
                 name = "";
-                text = "";
+                text_target = "";
                 middle_text = temp[1];
                 partial_text = "";
+                partial_text1 = "";
+                partial_text2 = "";
+                partial_text3 = "";
+                partial_text4 = "";
                 partial_middle_text = "";
+
+                history_info.push_back({"", middle_text});
             }
             queue_of_text.pop();
         } else {
@@ -209,8 +267,14 @@ void PlotScene::Initialize() {
         AddRefObject(*i.second.img);
     }
 
-    pText = new Engine::Label(&partial_text, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
-    AddRefObject(*pText);
+    pText1 = new Engine::Label(&partial_text1, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 635, 255, 255, 255, 220, 0.5, 0.5);
+    AddRefObject(*pText1);
+    pText2 = new Engine::Label(&partial_text2, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 685, 255, 255, 255, 220, 0.5, 0.5);
+    AddRefObject(*pText2);
+    pText3 = new Engine::Label(&partial_text3, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 735, 255, 255, 255, 220, 0.5, 0.5);
+    AddRefObject(*pText3);
+    pText4 = new Engine::Label(&partial_text4, "BoutiqueBitmap7x7_1.7.ttf", 48, 250, 785, 255, 255, 255, 220, 0.5, 0.5);
+    AddRefObject(*pText4);
 
     pName = new Engine::Label(&name, "BoutiqueBitmap7x7_1.7.ttf", 48, 150, 575, 220, 220, 255, 220, 0.5, 0.5);
     AddRefObject(*pName);
@@ -233,10 +297,32 @@ void PlotScene::Update(float deltaTime) {
     time += deltaTime;
     if (time > 0.04) {
         time -= 0.04;
-        if (text != partial_text) {
-            partial_text += text[partial_text.size()];
-            if (text[partial_text.size()] == ' ') {
+        if (text_target != partial_text) {
+            partial_text += text_target[partial_text.size()];
+            while (text_target[partial_text.size()] == ' ') {
                 partial_text += ' ';
+            }
+
+            if (partial_text1 != partial_target1) {
+                partial_text1 += partial_target1[partial_text1.size()];
+                while (partial_target1[partial_text1.size()] == ' ') {
+                    partial_text1 += ' ';
+                }
+            } else if (partial_text2 != partial_target2) {
+                partial_text2 += partial_target2[partial_text2.size()];
+                while (partial_target2[partial_text2.size()] == ' ') {
+                    partial_text2 += ' ';
+                }
+            } else if (partial_text3 != partial_target3) {
+                partial_text3 += partial_target3[partial_text3.size()];
+                while (partial_target3[partial_text3.size()] == ' ') {
+                    partial_text3 += ' ';
+                }
+            } else {
+                partial_text4 += partial_target4[partial_text4.size()];
+                while (partial_target4[partial_text4.size()] == ' ') {
+                    partial_text4 += ' ';
+                }
             }
         } else if (middle_text != partial_middle_text) {
             partial_middle_text += middle_text[partial_middle_text.size()];
