@@ -70,6 +70,21 @@ private:
 
     float time;
 
+    bool history;
+    bool prev_history;
+
+    std::string history_title;
+
+    Engine::Label *history_label;
+    Engine::RefImage *bg_history;
+    std::string history_name[8];
+    Engine::Label *history_name_label[8];
+    std::string history_text[8];
+    Engine::Label *history_text_label[8];
+
+    std::vector<std::pair<std::string, std::string>> history_info;
+    int history_ptr;
+
 public:
     explicit PlotScene() = default;
     void Initialize() override;
@@ -78,6 +93,7 @@ public:
     static void AutoOnClick();
     static void BackOnClick(int stage);
     void Update(float deltaTime) override;
+    void OnMouseScroll(int mx, int my, int delta);
 };
 
 

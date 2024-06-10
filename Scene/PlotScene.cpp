@@ -25,10 +25,17 @@ void splitLine(const std::string& line, std::vector<std::string>& words) {
 }
 
 void PlotScene::Initialize() {
+    history_info.clear();
+    history_ptr = 0;
+
+
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
     int halfH = h / 2;
+
+    history = false;
+    prev_history = false;
 
     music_map.clear();
     image_map.clear();
@@ -286,6 +293,22 @@ void PlotScene::Initialize() {
     btn->SetOnClickCallback([] { Engine::GameEngine::GetInstance().ChangeScene("stage-select"); });
     AddNewControlObject(btn);
 
+    bg_history = new Engine::RefImage(transparent, 100, 100, 1400, 632, 0.0, 0.0);
+    AddRefObject(*bg_history);
+
+    history_title = "";
+    history_label = new Engine::Label(&history_title, "BoutiqueBitmap7x7_1.7.ttf", 48, 120, 120, 255, 255, 255, 255, 0.0, 0.0);
+    AddRefObject(*history_label);
+
+    for (int i = 0; i < 8; ++i) {
+        history_name[i] = "";
+        history_text[i] = "";
+        history_name_label[i] = new Engine::Label(&history_name[i], "BoutiqueBitmap7x7_1.7.ttf", 48, 160, 200+65*i, 180, 180, 200, 255, 0.0);
+        history_text_label[i] = new Engine::Label(&history_text[i], "BoutiqueBitmap7x7_1.7.ttf", 48, 400, 200+65*i, 180, 180, 180, 255, 0.0);
+        AddRefObject(*history_name_label[i]);
+        AddRefObject(*history_text_label[i]);
+    }
+
     plot.close();
 
     time = 0.0f;
@@ -294,6 +317,16 @@ void PlotScene::Initialize() {
     //bgmInstance = AudioHelper::PlaySample("BeyondSunshine.ogg", true, AudioHelper::BGMVolume);
 }
 void PlotScene::Update(float deltaTime) {
+    if (history != prev_history) {
+        if (!history) {
+            bg_history->ChangeImageTo(transparent, 100, 100);
+            history_title = "";
+        } else {
+            bg_history->ChangeImageTo(gray, 100, 100);
+            history_title = "history:";
+        }
+        prev_history = history;
+    }
     time += deltaTime;
     if (time > 0.04) {
         time -= 0.04;
@@ -344,5 +377,55 @@ void PlotScene::Terminate() {
 
     while (!queue_of_text.empty()) {
         queue_of_text.pop();
+    }
+}
+
+void PlotScene::OnMouseScroll(int mx, int my, int delta) {
+    if (delta > 0) {
+        Engine::LOG(Engine::INFO) << "mouse scroll up, history_ptr=" << history_ptr;
+        if (!history) {
+            history = true;
+            history_ptr = history_info.size() - 8;
+            if (history_ptr < 0) {
+                history_ptr = 0;
+            }
+        } else {
+            if (history_ptr > 0) {
+                --history_ptr;
+            }
+        }
+        int count = 0;
+        for (; history_ptr + count < history_info.size() && count < 8; ++count) {
+            history_name[count] = history_info[history_ptr + count].first;
+            history_text[count] = history_info[history_ptr + count].second;
+        }
+        for (; count < 8; ++count) {
+            history_name[count] = "";
+            history_text[count] = "";
+        }
+    } else if (delta < 0) {
+        Engine::LOG(Engine::INFO) << "mouse scroll down, history_ptr=" << history_ptr;
+        if (history) {
+            if (history_ptr + 8 >= history_info.size()) {
+                history = false;
+                for (int i = 0; i < 8; ++i) {
+                    history_name[i] = "";
+                    history_text[i] = "";
+                }
+            } else {
+                if (history_ptr < history_info.size()-1) {
+                    ++history_ptr;
+                }
+                int count = 0;
+                for (; history_ptr + count < history_info.size() && count < 8; ++count) {
+                    history_name[count] = history_info[history_ptr + count].first;
+                    history_text[count] = history_info[history_ptr + count].second;
+                }
+                for (; count < 8; ++count) {
+                    history_name[count] = "";
+                    history_text[count] = "";
+                }
+            }
+        }
     }
 }
