@@ -48,21 +48,21 @@ std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> AudioHelper::PlaySample(const std::stri
 		Engine::LOG(Engine::VERBOSE) << "played audio (sample)";
 	return smart_ptr;
 }
-void AudioHelper::ChangeSampleVolume(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance, float volume) {
+void AudioHelper::ChangeSampleVolume(const std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>& sample_instance, float volume) {
 	if (!al_set_sample_instance_gain(sample_instance.get(), volume))
 		throw Engine::Allegro5Exception(("failed to change sample volume to " + std::to_string(volume)).c_str());
 }
-void AudioHelper::ChangeSamplePosition(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance, float position) {
+void AudioHelper::ChangeSamplePosition(const std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>& sample_instance, float position) {
 	// Get sample frequency (samples per second)
 	unsigned int sample_index = al_get_sample_instance_frequency(sample_instance.get()) * position;
 	if (!al_set_sample_instance_position(sample_instance.get(), sample_index))
 		throw Engine::Allegro5Exception(("failed to change sample position to " + std::to_string(position) + " s").c_str());
 }
-unsigned int AudioHelper::GetSampleLength(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance) {
+unsigned int AudioHelper::GetSampleLength(const std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>& sample_instance) {
 	// Get sample frequency (samples per second)
 	return al_get_sample_instance_length(sample_instance.get()) / al_get_sample_instance_frequency(sample_instance.get());
 }
-void AudioHelper::StopSample(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance) {
+void AudioHelper::StopSample(const std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>& sample_instance) {
 	if (!al_get_sample_instance_playing(sample_instance.get()))
 		return;
 	// No need to stop BGM by ourselves since the audio stops when the sample is destroyed.

@@ -37,7 +37,7 @@ void Turret::Update(float deltaTime) {
 	if (!Target) {
 		// Lock first seen target.
 		// Can be improved by Spatial Hash, Quad Tree, ...
-		// However simply loop through all enemies is enough for this program.
+		// However, simply loop through all enemies is enough for this program.
 		for (auto& it : scene->EnemyGroup->GetObjects()) {
 			Engine::Point diff = it->Position - Position;
 			if (diff.Magnitude() <= CollisionRadius) {

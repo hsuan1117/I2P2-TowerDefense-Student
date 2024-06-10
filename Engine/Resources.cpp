@@ -54,7 +54,7 @@ namespace Engine {
 		}
 	}
 
-	std::shared_ptr<ALLEGRO_BITMAP> Resources::GetBitmap(std::string name) {
+	std::shared_ptr<ALLEGRO_BITMAP> Resources::GetBitmap(const std::string& name) {
 		if (bitmaps.count(name) != 0)
 			return bitmaps[name];
 		std::string bitmapPath = bitmapPathPrefix + name;
@@ -64,7 +64,7 @@ namespace Engine {
 		bitmaps[name] = std::shared_ptr<ALLEGRO_BITMAP>(bmp, al_destroy_bitmap);
 		return bitmaps[name];
 	}
-	std::shared_ptr<ALLEGRO_BITMAP> Resources::GetBitmap(std::string name, int width, int height) {
+	std::shared_ptr<ALLEGRO_BITMAP> Resources::GetBitmap(const std::string& name, int width, int height) {
 		std::string idx = name + '?' + std::to_string(width) + 'x' + std::to_string(height);
 		if (bitmaps.count(idx) != 0)
 			return bitmaps[idx];
@@ -87,7 +87,7 @@ namespace Engine {
 		bitmaps[idx] = std::shared_ptr<ALLEGRO_BITMAP>(resized_bmp, al_destroy_bitmap);
 		return bitmaps[idx];
 	}
-	std::shared_ptr<ALLEGRO_FONT> Resources::GetFont(std::string name, int fontSize) {
+	std::shared_ptr<ALLEGRO_FONT> Resources::GetFont(const std::string& name, int fontSize) {
 		std::string idx = name + '?' + std::to_string(fontSize);
 		if (fonts.count(idx) != 0)
 			return fonts[idx];
@@ -99,7 +99,7 @@ namespace Engine {
 		fonts[idx] = std::shared_ptr<ALLEGRO_FONT>(font, al_destroy_font);
 		return fonts[idx];
 	}
-	std::shared_ptr<ALLEGRO_SAMPLE> Resources::GetSample(std::string name) {
+	std::shared_ptr<ALLEGRO_SAMPLE> Resources::GetSample(const std::string& name) {
 		if (samples.count(name) != 0)
 			return samples[name];
 		std::string samplePath = samplePathPrefix + name;
@@ -110,7 +110,7 @@ namespace Engine {
 		samples[name] = std::shared_ptr<ALLEGRO_SAMPLE>(sample, al_destroy_sample);
 		return samples[name];
 	}
-	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> Resources::GetSampleInstance(std::string name) {
+	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> Resources::GetSampleInstance(const std::string& name) {
 		std::shared_ptr<ALLEGRO_SAMPLE> sample = GetSample(name);
 		ALLEGRO_SAMPLE_INSTANCE* sample_instance = al_create_sample_instance(sample.get());
 		std::string samplePath = samplePathPrefix + name;

@@ -1,4 +1,3 @@
-#include <allegro5/color.h>
 #include <memory>
 
 #include "Collider.hpp"

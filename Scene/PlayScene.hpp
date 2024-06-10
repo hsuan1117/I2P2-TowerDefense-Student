@@ -51,11 +51,13 @@ public:
 	Group* EnemyGroup;
 	Group* EffectGroup;
 	Group* UIGroup;
+    //test
 	Engine::Label* UIMoney;
 	Engine::Label* UILives;
 	Engine::Image* imgTarget;
 	Engine::Sprite* dangerIndicator;
 	Turret* preview;
+    //test
 	std::vector<std::vector<TileType>> mapState;
 	std::vector<std::vector<int>> mapDistance;
 	std::list<std::pair<int, float>> enemyWaveData;
@@ -76,6 +78,7 @@ public:
 	void ReadMap();
 	void ReadEnemyWave();
 	void ConstructUI();
+    //test
 	void UIBtnClicked(int id);
 	bool CheckSpaceValid(int x, int y);
 	std::vector<std::vector<int>> CalculateBFSDistance();

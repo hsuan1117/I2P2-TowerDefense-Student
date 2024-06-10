@@ -20,7 +20,7 @@ namespace Engine {
 	private:
 		// Determine if global log is enabled.
 		static bool Enabled;
-		// Determine whether should log verbose messages or not.
+		// Determine whether you should log verbose messages or not.
 		static bool LogVerbose;
 		// The file path of the log file.
 		static const char* FilePath;
@@ -74,4 +74,4 @@ namespace Engine {
 		static void SetConfig(bool enabled = false, bool logVerbose = false, const char* filePath = "log.txt");
 	};
 }
-#endif // LOGGER_HPP
+#endif // LOG_HPP

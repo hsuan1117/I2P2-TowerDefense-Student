@@ -28,7 +28,7 @@ namespace Engine {
 		//       If you have heard of Garbage Collection, the concept is almost the same. However, smart pointers are faster,
 		//       and only relies on reference counting and class destructor, which I think is really "smart".
 		// Note (Advanced): The reason we didn't use std::weak_ptr here is to avoid the possibility of some resource
-		//                  being loaded and destroyed consecutively, which could occur if a object prototype being
+		//                  being loaded and destroyed consecutively, which could occur if an object prototype being
 		//                  added, removed, added, removed, ... in the same scene (e.g. bullets).
 		// Reference: Smart Pointers - std::unique_ptr, std::shared_ptr, std::weak_ptr.
 		std::unordered_map<std::string, std::shared_ptr<ALLEGRO_BITMAP>> bitmaps;
@@ -64,7 +64,7 @@ namespace Engine {
 		/// </summary>
 		/// <param name="name">The filename of the image. (Including extension)</param>
 		/// <returns>The smart pointer of the bitmap.</returns>
-		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(std::string name);
+		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(const std::string& name);
 		/// <summary>
 		/// Get bitmap pointer by name, and resize it. The file should be put under "resource/images/".
 		/// </summary>
@@ -72,26 +72,26 @@ namespace Engine {
 		/// <param name="width">The target width that we want the image to be resized to.</param>
 		/// <param name="height">The target height that we want the image to be resized to.</param>
 		/// <returns>The smart pointer of the bitmap.</returns>
-		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(std::string name, int width, int height);
+		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(const std::string& name, int width, int height);
 		/// <summary>
 		/// Get font pointer by name. The file should be put under "resource/fonts/".
 		/// </summary>
 		/// <param name="name">The filename of the font. (Including extension)</param>
 		/// <param name="size">The font size of the font.</param>
 		/// <returns>The smart pointer of the font.</returns>
-		std::shared_ptr<ALLEGRO_FONT> GetFont(std::string name, int fontSize);
+		std::shared_ptr<ALLEGRO_FONT> GetFont(const std::string& name, int fontSize);
 		/// <summary>
 		/// Get sample pointer by name. The file should be put under "resource/audios".
 		/// </summary>
 		/// <param name="name">The filename of the audio. (Including extension)</param>
 		/// <returns>The smart pointer of the sample.</returns>
-		std::shared_ptr<ALLEGRO_SAMPLE> GetSample(std::string name);
+		std::shared_ptr<ALLEGRO_SAMPLE> GetSample(const std::string& name);
 		/// <summary>
 		/// Get sample instance pointer by name. The file should be put under "resource/audios".
 		/// </summary>
 		/// <param name="name">The filename of the audio. (Including extension)</param>
 		/// <returns>The smart pointer of the sample instance.</returns>
-		std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> GetSampleInstance(std::string name);
+		std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> GetSampleInstance(const std::string& name);
 		/// <summary>
 		/// Typical function to retrieve Singleton instance and supports lazy initialization.
 		/// </summary>

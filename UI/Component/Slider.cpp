@@ -14,7 +14,10 @@ Slider::Slider(float x, float y, float w, float h) :
 	Anchor = Engine::Point(0.5, 0.5);
 }
 void Slider::Draw() const {
-    // TODO: [HACKATHON-3-BUG] (4/5): Draw the nested components here, so they are displayed correctly
+    // ODO: [HACKATHON-3-BUG] (4/5): Draw the nested components here, so they are displayed correctly
+    Bar.Draw();
+    End1.Draw();
+    End2.Draw();
 	ImageButton::Draw();
 }
 void Slider::SetOnValueChangedCallback(std::function<void(float value)> onValueChangedCallback) {
@@ -22,11 +25,13 @@ void Slider::SetOnValueChangedCallback(std::function<void(float value)> onValueC
 }
 void Slider::SetValue(float value) {
 	if (this->value != value) {
-        // TODO: [HACKATHON-3-BUG] (5/5): Fix the function, so it can set the slider value correctly
+        // ODO: [HACKATHON-3-BUG] (5/5): Fix the function, so it can set the slider value correctly
         Position.x = (1 - value) * Bar.Position.x + value * (Bar.Position.x + Bar.Size.x);
-		if (OnValueChangedCallback)
-			OnValueChangedCallback(value);
-	}
+		if (OnValueChangedCallback) {
+            OnValueChangedCallback(value);
+            this->value = value;
+        }
+    }
 }
 void Slider::OnMouseDown(int button, int mx, int my) {
 	if ((button & 1) && mouseIn)

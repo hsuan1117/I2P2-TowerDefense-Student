@@ -16,7 +16,7 @@ protected:
 	float speed;
 	float damage;
 	Turret* parent;
-	PlayScene* getPlayScene();
+	static PlayScene* getPlayScene();
 	virtual void OnExplode(Enemy* enemy);
 public:
 	Enemy* Target = nullptr;

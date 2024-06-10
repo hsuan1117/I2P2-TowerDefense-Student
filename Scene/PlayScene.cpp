@@ -17,6 +17,7 @@
 #include "Turret/LaserTurret.hpp"
 #include "Turret/MachineGunTurret.hpp"
 #include "Turret/MissileTurret.hpp"
+#include "Turret/MomoiTurret.hpp"
 #include "UI/Animation/Plane.hpp"
 #include "Enemy/PlaneEnemy.hpp"
 #include "PlayScene.hpp"
@@ -24,6 +25,11 @@
 #include "Enemy/SoldierEnemy.hpp"
 #include "Enemy/TankEnemy.hpp"
 #include "Turret/TurretButton.hpp"
+#include "Enemy/FlameTank.hpp"
+#include "WinScene.hpp"
+
+//ODO: Add shortcut key for momoi turret
+//TODO: Insert the point of scoreboard correctly
 
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
@@ -39,9 +45,9 @@ Engine::Point PlayScene::GetClientSize() {
 	return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
 void PlayScene::Initialize() {
-	// TODO: [HACKATHON-3-BUG] (1/5): There's a bug in this file, which crashes the game when you lose. Try to find it.
-	// TODO: [HACKATHON-3-BUG] (2/5): Find out the cheat code to test.
-    // TODO: [HACKATHON-3-BUG] (2/5): It should generate a Plane, and add 10000 to the money, but it doesn't work now.
+	// ODO: [HACKATHON-3-BUG] (1/5): There's a bug in this file, which crashes the game when you lose. Try to find it.
+	// ODO: [HACKATHON-3-BUG] (2/5): Find out the cheat code to test.
+    // ODO: [HACKATHON-3-BUG] (2/5): It should generate a Plane, and add 10000 to the money, but it doesn't work now.
 	mapState.clear();
 	keyStrokes.clear();
 	ticks = 0;
@@ -74,6 +80,8 @@ void PlayScene::Initialize() {
 	bgmId = AudioHelper::PlayBGM("play.ogg");
 }
 void PlayScene::Terminate() {
+    SetLastGameInfo(money, lives);
+
 	AudioHelper::StopBGM(bgmId);
 	AudioHelper::StopSample(deathBGMInstance);
 	deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
@@ -161,9 +169,12 @@ void PlayScene::Update(float deltaTime) {
 		case 3:
 			EnemyGroup->AddNewObject(enemy = new TankEnemy(SpawnCoordinate.x, SpawnCoordinate.y));
 			break;
-        // TODO: [CUSTOM-ENEMY]: You need to modify 'Resource/enemy1.txt', or 'Resource/enemy2.txt' to spawn the 4th enemy.
+        case 4:
+            EnemyGroup->AddNewObject(enemy = new FlameTank(SpawnCoordinate.x, SpawnCoordinate.y));
+        // ODO: [CUSTOM-ENEMY]: You need to modify 'Resource/enemy1.txt', or 'Resource/enemy2.txt' to spawn the 4th enemy.
         //         The format is "[EnemyId] [TimeDelay] [Repeat]".
-        // TODO: [CUSTOM-ENEMY]: Enable the creation of the enemy.
+        // ODO: [CUSTOM-ENEMY]: Enable the creation of the enemy.
+            break;
 		default:
 			continue;
 		}
@@ -270,7 +281,9 @@ void PlayScene::OnKeyDown(int keyCode) {
 					return;
 				++it;
 			}
+
 			EffectGroup->AddNewObject(new Plane());
+            EarnMoney(10000);
 		}
 	}
 	if (keyCode == ALLEGRO_KEY_Q) {
@@ -285,7 +298,10 @@ void PlayScene::OnKeyDown(int keyCode) {
 		// Hotkey for MissileTurret.
 		UIBtnClicked(2);
 	}
-	// TODO: [CUSTOM-TURRET]: Make specific key to create the turret.
+    else if (keyCode == ALLEGRO_KEY_D) {
+        UIBtnClicked(3);
+    }
+	// ODO: [CUSTOM-TURRET]: Make specific key to create the turret.
 	else if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9) {
 		// Hotkey for Speed up.
 		SpeedMult = keyCode - ALLEGRO_KEY_0;
@@ -341,14 +357,33 @@ void PlayScene::ReadMap() {
 	}
 }
 void PlayScene::ReadEnemyWave() {
-    // TODO: [HACKATHON-3-BUG] (3/5): Trace the code to know how the enemies are created.
-    // TODO: [HACKATHON-3-BUG] (3/5): There is a bug in these files, which let the game only spawn the first enemy, try to fix it.
+    // ODO: [HACKATHON-3-BUG] (3/5): Trace the code to know how the enemies are created.
+    // ODO: [HACKATHON-3-BUG] (3/5): There is a bug in these files, which let the game only spawn the first enemy, try to fix it.
     std::string filename = std::string("Resource/enemy") + std::to_string(MapId) + ".txt";
 	// Read enemy file.
 	float type, wait, repeat;
 	enemyWaveData.clear();
 	std::ifstream fin(filename);
-	while (fin >> type && fin >> wait && fin >> repeat) {
+	while (true) {
+
+        bool ts = (bool)(fin >> type);
+        bool ws = (bool)(fin >> wait);
+        bool rs = (bool)(fin >> repeat);
+
+        if (!ts && !ws && !rs) {
+            break;
+        }
+
+        if (!ts) {
+            type = 0;
+        }
+        if (!ws) {
+            wait = 1.0;
+        }
+        if (!rs) {
+            repeat = 0;
+        }
+
 		for (int i = 0; i < repeat; i++)
 			enemyWaveData.emplace_back(type, wait);
 	}
@@ -368,23 +403,31 @@ void PlayScene::ConstructUI() {
 		Engine::Sprite("play/turret-1.png", 1294, 136 - 8, 0, 0, 0, 0)
 		, 1294, 136, MachineGunTurret::Price);
 	// Reference: Class Member Function Pointer and std::bind.
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
+	btn->SetOnClickCallback([this] { UIBtnClicked(0); });
 	UIGroup->AddNewControlObject(btn);
 	// Button 2
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/tower-base.png", 1370, 136, 0, 0, 0, 0),
 		Engine::Sprite("play/turret-2.png", 1370, 136 - 8, 0, 0, 0, 0)
 		, 1370, 136, LaserTurret::Price);
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 1));
+	btn->SetOnClickCallback([this] { UIBtnClicked(1); });
 	UIGroup->AddNewControlObject(btn);
 	// Button 3
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/tower-base.png", 1446, 136, 0, 0, 0, 0),
 		Engine::Sprite("play/turret-3.png", 1446, 136, 0, 0, 0, 0)
 		, 1446, 136, MissileTurret::Price);
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 2));
+	btn->SetOnClickCallback([this] { UIBtnClicked(2); });
 	UIGroup->AddNewControlObject(btn);
-	// TODO: [CUSTOM-TURRET]: Create a button to support constructing the turret.
+    // Button 4
+    btn = new TurretButton("play/floor.png", "play/dirt.png",
+                           Engine::Sprite("play/tower-base.png", 1446+76, 136, 0, 0, 0, 0),
+                           Engine::Sprite("play/momoi64x64.png", 1446+76, 136, 0, 0, 0, 0)
+            , 1446+76, 136, MomoiTurret::Price);
+    btn->SetOnClickCallback([this] { UIBtnClicked(3); });
+    UIGroup->AddNewControlObject(btn);
+
+	// ODO: [CUSTOM-TURRET]: Create a button to support constructing the turret.
 	int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
 	int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
 	int shift = 135 + 25;
@@ -396,13 +439,15 @@ void PlayScene::ConstructUI() {
 void PlayScene::UIBtnClicked(int id) {
 	if (preview)
 		UIGroup->RemoveObject(preview->GetObjectIterator());
-    // TODO: [CUSTOM-TURRET]: On callback, create the turret.
+    // ODO: [CUSTOM-TURRET]: On callback, create the turret.
 	if (id == 0 && money >= MachineGunTurret::Price)
 		preview = new MachineGunTurret(0, 0);
 	else if (id == 1 && money >= LaserTurret::Price)
 		preview = new LaserTurret(0, 0);
 	else if (id == 2 && money >= MissileTurret::Price)
 		preview = new MissileTurret(0, 0);
+    else if (id == 3 && money >= MomoiTurret::Price)
+        preview = new MomoiTurret(0, 0);
 	if (!preview)
 		return;
 	preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
@@ -424,15 +469,16 @@ bool PlayScene::CheckSpaceValid(int x, int y) {
 		return false;
 	for (auto& it : EnemyGroup->GetObjects()) {
 		Engine::Point pnt;
-		pnt.x = floor(it->Position.x / BlockSize);
-		pnt.y = floor(it->Position.y / BlockSize);
+		pnt.x = std::floor(it->Position.x / BlockSize);
+		pnt.y = std::floor(it->Position.y / BlockSize);
 		if (pnt.x < 0) pnt.x = 0;
 		if (pnt.x >= MapWidth) pnt.x = MapWidth - 1;
 		if (pnt.y < 0) pnt.y = 0;
 		if (pnt.y >= MapHeight) pnt.y = MapHeight - 1;
-		if (map[pnt.y][pnt.x] == -1)
-			return false;
-	}
+		if (map[pnt.y][pnt.x] == -1) {
+            return false;
+        }
+    }
 	// All enemy have path to exit.
 	mapState[y][x] = TILE_OCCUPIED;
 	mapDistance = map;
@@ -448,14 +494,59 @@ std::vector<std::vector<int>> PlayScene::CalculateBFSDistance() {
 	// BFS from end point.
 	if (mapState[MapHeight - 1][MapWidth - 1] != TILE_DIRT)
 		return map;
-	que.push(Engine::Point(MapWidth - 1, MapHeight - 1));
+	que.emplace(MapWidth - 1, MapHeight - 1);
 	map[MapHeight - 1][MapWidth - 1] = 0;
 	while (!que.empty()) {
 		Engine::Point p = que.front();
 		que.pop();
-		// TODO: [BFS PathFinding] (1/1): Implement a BFS starting from the most right-bottom block in the map.
+		// ODO: [BFS PathFinding] (1/1): Implement a BFS starting from the most right-bottom block in the map.
 		//               For each step you should assign the corresponding distance to the most right-bottom block.
 		//               mapState[y][x] is TILE_DIRT if it is empty.
+
+        if (p.y < 0 || p.x < 0 || p.y >= MapHeight || p.x >= MapWidth) {
+            continue;
+        }
+
+
+        int minbgt0 = -4;
+
+        if (p.y-1 >= 0 && map[p.y-1][p.x] >= 0) {
+            minbgt0 = map[p.y-1][p.x] + 1;
+        }
+        if (p.x-1 >= 0 && map[p.y][p.x-1] >= 0 && map[p.y][p.x-1] > minbgt0) {
+            minbgt0 = map[p.y][p.x-1] + 1;
+        }
+        if (p.y+1 < MapHeight && map[p.y+1][p.x] >= 0 && map[p.y+1][p.x] > minbgt0) {
+            minbgt0 = map[p.y+1][p.x] + 1;
+        }
+        if (p.x+1 < MapWidth && map[p.y][p.x+1] >= 0 && map[p.y][p.x+1] > minbgt0) {
+            minbgt0 = map[p.y][p.x+1] + 1;
+        }
+
+
+        if (p.y == MapHeight-1 && p.x == MapWidth-1) {
+            map[p.y][p.x] = 0;
+        } else {
+            map[p.y][p.x] = minbgt0;
+        }
+
+
+        if (p.y-1 >= 0 && mapState[p.y-1][p.x] == TILE_DIRT && map[p.y-1][p.x] == -1) {
+            que.emplace(p.x, p.y-1);
+            map[p.y-1][p.x] = -2;
+        }
+        if (p.x-1 >= 0 && mapState[p.y][p.x-1] == TILE_DIRT && map[p.y][p.x-1] == -1) {
+            que.emplace(p.x-1, p.y);
+            map[p.y][p.x-1] = -2;
+        }
+        if (p.y+1 < MapHeight && mapState[p.y+1][p.x] == TILE_DIRT && map[p.y+1][p.x] == -1) {
+            que.emplace(p.x, p.y+1);
+            map[p.y+1][p.x] = -2;
+        }
+        if (p.x+1 < MapWidth && mapState[p.y][p.x+1] == TILE_DIRT && map[p.y][p.x+1] == -1) {
+            que.emplace(p.x+1, p.y);
+            map[p.y][p.x+1] = -2;
+        }
 	}
 	return map;
 }

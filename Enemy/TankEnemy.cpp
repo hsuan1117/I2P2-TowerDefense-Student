@@ -1,11 +1,10 @@
 #include <allegro5/base.h>
 #include <random>
-#include <string>
 
 #include "Engine/Point.hpp"
 #include "TankEnemy.hpp"
 
-TankEnemy::TankEnemy(int x, int y) : Enemy("play/enemy-3.png", x, y, 20, 20, 100, 50),
+TankEnemy::TankEnemy(int x, int y) : Enemy("play/enemy-3.png", x, y, 20, 20, 100, 75),
 head("play/enemy-3-head.png", x, y), targetRotation(0) {
 }
 void TankEnemy::Draw() const {

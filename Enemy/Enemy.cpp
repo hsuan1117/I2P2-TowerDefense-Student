@@ -3,6 +3,7 @@
 #include <cmath>
 #include <random>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Engine/AudioHelper.hpp"
@@ -32,7 +33,7 @@ void Enemy::OnExplode() {
 	}
 }
 Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money) :
-	Engine::Sprite(img, x, y), speed(speed), hp(hp), money(money) {
+	Engine::Sprite(std::move(img), x, y), speed(speed), hp(hp), money(money) {
 	CollisionRadius = radius;
 	reachEndTime = 0;
 }

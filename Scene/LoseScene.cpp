@@ -1,6 +1,4 @@
 #include <functional>
-#include <string>
-
 #include "Engine/AudioHelper.hpp"
 #include "Engine/GameEngine.hpp"
 #include "UI/Component/Image.hpp"
@@ -8,10 +6,9 @@
 #include "UI/Component/Label.hpp"
 #include "LoseScene.hpp"
 #include "PlayScene.hpp"
-#include "Engine/Point.hpp"
 
 void LoseScene::Initialize() {
-	// TODO: [HACKATHON-1-SCENE] (1/4): You can imitate the 2 files: 'LoseScene.hpp', 'LoseScene.cpp' to implement your start scene.
+	// ODO: [HACKATHON-1-SCENE] (1/4): You can imitate the 2 files: 'LoseScene.hpp', 'LoseScene.cpp' to implement your start scene.
 	int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
 	int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
 	int halfW = w / 2;
